@@ -1,0 +1,1036 @@
+{
+ "generated": "2026-10-06T19:37:07Z",
+ "buckets": [
+  {
+   "id": "brain",
+   "name": "Brain",
+   "group": "Hardware",
+   "order": 10,
+   "rolled": true
+  },
+  {
+   "id": "power",
+   "name": "Power",
+   "group": "Hardware",
+   "order": 20,
+   "rolled": false
+  },
+  {
+   "id": "connect",
+   "name": "Connect",
+   "group": "Hardware",
+   "order": 30,
+   "rolled": false
+  },
+  {
+   "id": "sense",
+   "name": "Sense",
+   "group": "Hardware",
+   "order": 40,
+   "rolled": true
+  },
+  {
+   "id": "act",
+   "name": "Act",
+   "group": "Hardware",
+   "order": 50,
+   "rolled": false
+  },
+  {
+   "id": "spotlight",
+   "name": "Spotlight part",
+   "group": "Hardware",
+   "order": 60,
+   "rolled": false
+  },
+  {
+   "id": "user",
+   "name": "User",
+   "group": "Human",
+   "order": 70,
+   "rolled": true
+  },
+  {
+   "id": "place",
+   "name": "Place",
+   "group": "Human",
+   "order": 80,
+   "rolled": false
+  },
+  {
+   "id": "verb",
+   "name": "Verb",
+   "group": "Human",
+   "order": 90,
+   "rolled": false
+  },
+  {
+   "id": "form",
+   "name": "Form factor",
+   "group": "Flavor",
+   "order": 100,
+   "rolled": true
+  },
+  {
+   "id": "vibe",
+   "name": "Vibe",
+   "group": "Flavor",
+   "order": 110,
+   "rolled": true
+  },
+  {
+   "id": "twist",
+   "name": "Twist",
+   "group": "Flavor",
+   "order": 120,
+   "rolled": true
+  }
+ ],
+ "items": [
+  {
+   "id": "act-buzzer",
+   "bucket": "act",
+   "label": "Piezo buzzer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-eink",
+   "bucket": "act",
+   "label": "E-ink display",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-fan",
+   "bucket": "act",
+   "label": "Fan / airflow",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-haptic",
+   "bucket": "act",
+   "label": "Haptic motor",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-leds",
+   "bucket": "act",
+   "label": "Addressable RGB LEDs",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-oled",
+   "bucket": "act",
+   "label": "Small OLED",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-printer",
+   "bucket": "act",
+   "label": "Thermal printer",
+   "level": 3,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
+   "id": "act-servo",
+   "bucket": "act",
+   "label": "Servo",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-solenoid",
+   "bucket": "act",
+   "label": "Solenoid",
+   "level": 2,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
+   "id": "act-speaker",
+   "bucket": "act",
+   "label": "Speaker / audio",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "act-stepper",
+   "bucket": "act",
+   "label": "Stepper motor",
+   "level": 2,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
+   "id": "brain-attiny",
+   "bucket": "brain",
+   "label": "ATtiny1616",
+   "level": 1,
+   "tags": [
+    "lowpower"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-ch32v003",
+   "bucket": "brain",
+   "label": "CH32V003",
+   "level": 2,
+   "tags": [
+    "lowpower"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-esp32c3",
+   "bucket": "brain",
+   "label": "ESP32-C3",
+   "level": 1,
+   "tags": [
+    "wifi",
+    "ble"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-esp32c6",
+   "bucket": "brain",
+   "label": "ESP32-C6",
+   "level": 2,
+   "tags": [
+    "wifi",
+    "ble",
+    "thread"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-esp32s3",
+   "bucket": "brain",
+   "label": "ESP32-S3",
+   "level": 2,
+   "tags": [
+    "wifi",
+    "ble",
+    "camera-ok",
+    "usb"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-nrf52840",
+   "bucket": "brain",
+   "label": "nRF52840",
+   "level": 2,
+   "tags": [
+    "ble",
+    "thread",
+    "usb",
+    "lowpower"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-pico2w",
+   "bucket": "brain",
+   "label": "Raspberry Pi Pico 2 W",
+   "level": 1,
+   "tags": [
+    "wifi",
+    "ble",
+    "usb"
+   ],
+   "needs": []
+  },
+  {
+   "id": "brain-rp2350",
+   "bucket": "brain",
+   "label": "RP2350 (Pico 2)",
+   "level": 1,
+   "tags": [
+    "usb"
+   ],
+   "needs": []
+  },
+  {
+   "id": "connect-ble",
+   "bucket": "connect",
+   "label": "Bluetooth LE",
+   "level": 2,
+   "tags": [],
+   "needs": [
+    "ble"
+   ]
+  },
+  {
+   "id": "connect-espnow",
+   "bucket": "connect",
+   "label": "ESP-NOW (device to device)",
+   "level": 2,
+   "tags": [],
+   "needs": [
+    "wifi"
+   ]
+  },
+  {
+   "id": "connect-lora",
+   "bucket": "connect",
+   "label": "LoRa",
+   "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "connect-nfc",
+   "bucket": "connect",
+   "label": "NFC",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "connect-none",
+   "bucket": "connect",
+   "label": "None (standalone)",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "connect-thread",
+   "bucket": "connect",
+   "label": "Matter over Thread",
+   "level": 3,
+   "tags": [],
+   "needs": [
+    "thread"
+   ]
+  },
+  {
+   "id": "connect-wifi",
+   "bucket": "connect",
+   "label": "Wi-Fi",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "wifi"
+   ]
+  },
+  {
+   "id": "form-badge",
+   "bucket": "form",
+   "label": "Badge",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-bike",
+   "bucket": "form",
+   "label": "Bike-mounted",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-clipon",
+   "bucket": "form",
+   "label": "Clip-on",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-desktoy",
+   "bucket": "form",
+   "label": "Desktop toy",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-hat",
+   "bucket": "form",
+   "label": "Hat",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-keychain",
+   "bucket": "form",
+   "label": "Keychain",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-plush",
+   "bucket": "form",
+   "label": "Plush",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-pocket",
+   "bucket": "form",
+   "label": "Pocket-sized",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-wall",
+   "bucket": "form",
+   "label": "Wall-mounted",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "form-wearable",
+   "bucket": "form",
+   "label": "Wearable",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-balcony",
+   "bucket": "place",
+   "label": "Balcony",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-bedside",
+   "bucket": "place",
+   "label": "Bedside",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-bike",
+   "bucket": "place",
+   "label": "Bike",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-car",
+   "bucket": "place",
+   "label": "Car",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-classroom",
+   "bucket": "place",
+   "label": "Classroom",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-desk",
+   "bucket": "place",
+   "label": "Desk",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-garden",
+   "bucket": "place",
+   "label": "Garden",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-kitchen",
+   "bucket": "place",
+   "label": "Kitchen",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-street",
+   "bucket": "place",
+   "label": "Street",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "place-workshop",
+   "bucket": "place",
+   "label": "Workshop",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "power-aa",
+   "bucket": "power",
+   "label": "AA batteries",
+   "level": 1,
+   "tags": [
+    "high-current"
+   ],
+   "needs": []
+  },
+  {
+   "id": "power-coin",
+   "bucket": "power",
+   "label": "Coin cell",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "power-crank",
+   "bucket": "power",
+   "label": "Hand crank",
+   "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "power-lipo",
+   "bucket": "power",
+   "label": "LiPo battery",
+   "level": 1,
+   "tags": [
+    "high-current"
+   ],
+   "needs": []
+  },
+  {
+   "id": "power-solar",
+   "bucket": "power",
+   "label": "Solar + supercap",
+   "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "power-usbc",
+   "bucket": "power",
+   "label": "USB-C",
+   "level": 1,
+   "tags": [
+    "high-current"
+   ],
+   "needs": []
+  },
+  {
+   "id": "sense-air",
+   "bucket": "sense",
+   "label": "Air quality (VOC / CO2)",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-camera",
+   "bucket": "sense",
+   "label": "Camera",
+   "level": 3,
+   "tags": [],
+   "needs": [
+    "camera-ok"
+   ]
+  },
+  {
+   "id": "sense-color",
+   "bucket": "sense",
+   "label": "Color / light",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-gps",
+   "bucket": "sense",
+   "label": "GPS",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-hall",
+   "bucket": "sense",
+   "label": "Hall effect / magnet",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-heart",
+   "bucket": "sense",
+   "label": "Heart rate (PPG)",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-imu",
+   "bucket": "sense",
+   "label": "IMU / motion",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-load",
+   "bucket": "sense",
+   "label": "Load cell / weight",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-mic",
+   "bucket": "sense",
+   "label": "Microphone",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-pir",
+   "bucket": "sense",
+   "label": "PIR motion",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-radar",
+   "bucket": "sense",
+   "label": "mmWave presence radar",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-soil",
+   "bucket": "sense",
+   "label": "Soil moisture",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-temp",
+   "bucket": "sense",
+   "label": "Temperature + humidity",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-tof",
+   "bucket": "sense",
+   "label": "Time-of-flight distance",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "sense-touch",
+   "bucket": "sense",
+   "label": "Capacitive touch",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-foundobject",
+   "bucket": "twist",
+   "label": "Built into a found object",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-matchbox",
+   "bucket": "twist",
+   "label": "Fits in a matchbox",
+   "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-noapp",
+   "bucket": "twist",
+   "label": "No app",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-noscreen",
+   "bucket": "twist",
+   "label": "No screen",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-onebutton",
+   "bucket": "twist",
+   "label": "One button only",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-sound",
+   "bucket": "twist",
+   "label": "Must make a sound",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-twopeople",
+   "bucket": "twist",
+   "label": "Takes two people to use",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-under15",
+   "bucket": "twist",
+   "label": "Under €15 in parts",
+   "level": 2,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-waterproof",
+   "bucket": "twist",
+   "label": "Waterproof",
+   "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "twist-yearbattery",
+   "bucket": "twist",
+   "label": "Runs a year on battery",
+   "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-cook",
+   "bucket": "user",
+   "label": "Home cook",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-cyclist",
+   "bucket": "user",
+   "label": "Cyclist",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-gamer",
+   "bucket": "user",
+   "label": "Gamer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-gardener",
+   "bucket": "user",
+   "label": "Gardener",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-grandparent",
+   "bucket": "user",
+   "label": "Grandparent",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-kid",
+   "bucket": "user",
+   "label": "Kid",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-musician",
+   "bucket": "user",
+   "label": "Musician",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-nightshift",
+   "bucket": "user",
+   "label": "Night-shift worker",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-pet",
+   "bucket": "user",
+   "label": "Pet",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-runner",
+   "bucket": "user",
+   "label": "Runner",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-student",
+   "bucket": "user",
+   "label": "Student",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-teacher",
+   "bucket": "user",
+   "label": "Teacher",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "user-wheelchair",
+   "bucket": "user",
+   "label": "Wheelchair user",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-calm",
+   "bucket": "verb",
+   "label": "Calm",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-celebrate",
+   "bucket": "verb",
+   "label": "Celebrate",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-connect",
+   "bucket": "verb",
+   "label": "Connect",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-measure",
+   "bucket": "verb",
+   "label": "Measure",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-play",
+   "bucket": "verb",
+   "label": "Play",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-protect",
+   "bucket": "verb",
+   "label": "Protect",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-remind",
+   "bucket": "verb",
+   "label": "Remind",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-teach",
+   "bucket": "verb",
+   "label": "Teach",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-track",
+   "bucket": "verb",
+   "label": "Track",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "verb-warn",
+   "bucket": "verb",
+   "label": "Warn",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-80s",
+   "bucket": "vibe",
+   "label": "80s",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-bauhaus",
+   "bucket": "vibe",
+   "label": "Bauhaus",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-cyberpunk",
+   "bucket": "vibe",
+   "label": "Cyberpunk",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-industrial",
+   "bucket": "vibe",
+   "label": "Industrial",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-kawaii",
+   "bucket": "vibe",
+   "label": "Kawaii",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-luxury",
+   "bucket": "vibe",
+   "label": "Luxury",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-midcentury",
+   "bucket": "vibe",
+   "label": "Mid-century",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-modernisme",
+   "bucket": "vibe",
+   "label": "Barcelona modernisme",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-retrofuturist",
+   "bucket": "vibe",
+   "label": "Retro-futurist",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-solarpunk",
+   "bucket": "vibe",
+   "label": "Solarpunk",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-steampunk",
+   "bucket": "vibe",
+   "label": "Steampunk",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "vibe-y2k",
+   "bucket": "vibe",
+   "label": "Y2K",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  }
+ ]
+}

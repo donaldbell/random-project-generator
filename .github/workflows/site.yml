@@ -1,0 +1,64 @@
+name: Sync pantry and publish site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # "Run workflow" button on the Actions tab
+  schedule:
+    - cron: "17 5 * * *"    # daily at 05:17 UTC
+  repository_dispatch:      # lets an Airtable automation trigger a sync
+    types: [sync-pantry]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pull Airtable into pantry.json
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+          AIRTABLE_BASE: appxsuF2T3tdbNWjk
+        run: |
+          if [ -z "$AIRTABLE_TOKEN" ]; then
+            echo "::warning::No AIRTABLE_TOKEN secret yet, publishing the pantry.json already in the repo."
+          else
+            node scripts/sync-pantry.mjs
+          fi
+      - name: Commit if the pantry changed
+        run: |
+          if git diff --quiet -- pantry.json; then
+            echo "Pantry unchanged."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add pantry.json
+            git commit -m "Sync pantry from Airtable"
+            git push
+          fi
+      - name: Collect site files
+        run: mkdir _site && cp index.html pantry.json _site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

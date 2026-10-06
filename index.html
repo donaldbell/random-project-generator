@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Random Project Generator</title>
+<meta name="description" content="Roll random hardware, user and vibe ingredients to spark a one-week rapid prototyping build.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+html{color-scheme:light}
+body{margin:0}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Layout: a bench sheet. Controls strip, the roll "ticket", slot cards grouped Hardware / Human / Flavor, then the pantry editor and the roll log. Solder-mask green + copper pads. */
+:root {
+  --bg: #E9F0EB;
+  --surface: #F7FAF7;
+  --sunk: #DDE7E0;
+  --ink: #12231B;
+  --muted: #56695F;
+  --line: #C4D3C9;
+  --mask: #0F5C43;
+  --mask-ink: #F2FAF5;
+  --copper: #B35A22;
+  --copper-ink: #FFF8F2;
+  --warn: #8A5300;
+  --warn-bg: #F7E7C8;
+  --font-display: "Bricolage Grotesque", "Avenir Next Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1712; --surface: #12221A; --sunk: #0F1D16; --ink: #E2EEE6; --muted: #93A99C;
+    --line: #25392E; --mask: #48C493; --mask-ink: #08150F; --copper: #E79A62; --copper-ink: #1A0D04;
+    --warn: #F0B65A; --warn-bg: #33270F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1712; --surface: #12221A; --sunk: #0F1D16; --ink: #E2EEE6; --muted: #93A99C;
+  --line: #25392E; --mask: #48C493; --mask-ink: #08150F; --copper: #E79A62; --copper-ink: #1A0D04;
+  --warn: #F0B65A; --warn-bg: #33270F; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--font-body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 64px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+.eyebrow { font: 500 11px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Header */
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; }
+.brand h1 { font-size: clamp(34px, 6vw, 54px); font-weight: 800; line-height: 0.95; color: var(--mask); }
+.brand h1 span { color: var(--copper); }
+.brand p { margin: 8px 0 0; color: var(--muted); max-width: 52ch; }
+
+/* Controls */
+.controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
+.dial { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+.dial button { border: 0; background: transparent; padding: 7px 14px; border-radius: 999px; font-weight: 500; font-size: 14px; color: var(--muted); }
+.dial button[aria-pressed="true"] { background: var(--mask); color: var(--mask-ink); }
+.rollbtn { border: 0; background: var(--copper); color: var(--copper-ink); font: 800 20px/1 var(--font-display); padding: 14px 26px; border-radius: 999px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 3px 0 color-mix(in srgb, var(--copper) 55%, var(--ink)); transition: transform .08s; }
+.rollbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in srgb, var(--copper) 55%, var(--ink)); }
+.rollbtn svg { width: 22px; height: 22px; }
+.ladder { font: 13px/1.4 var(--font-mono); color: var(--muted); }
+.ladder b { color: var(--ink); font-weight: 500; }
+
+/* Ticket */
+.ticket { background: var(--mask); color: var(--mask-ink); border-radius: 14px; padding: 22px 24px; display: grid; gap: 14px; position: relative; overflow: hidden; }
+.ticket::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .14;
+  background-image: radial-gradient(circle, currentColor 1.2px, transparent 1.6px); background-size: 18px 18px; mask-image: linear-gradient(90deg, transparent 55%, #000); }
+.ticket .headline { font: 800 clamp(22px, 3.6vw, 34px)/1.15 var(--font-display); text-wrap: balance; position: relative; z-index: 1; min-width: 0; overflow-wrap: anywhere; }
+.ticket .headline .dot { opacity: .5; padding: 0 .15em; }
+.ticket .empty { opacity: .8; font-weight: 600; }
+.ticket-actions { display: flex; flex-wrap: wrap; gap: 8px; position: relative; z-index: 1; align-items: center; }
+.ticket-actions button { border: 1px solid color-mix(in srgb, var(--mask-ink) 40%, transparent); background: transparent; color: var(--mask-ink); padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; }
+.ticket-actions button:hover { background: color-mix(in srgb, var(--mask-ink) 12%, transparent); }
+.ticket-actions input { background: color-mix(in srgb, var(--mask-ink) 10%, transparent); border: 1px solid color-mix(in srgb, var(--mask-ink) 30%, transparent); color: var(--mask-ink); border-radius: 999px; padding: 7px 14px; font-size: 14px; min-width: 0; flex: 1 1 200px; max-width: 320px; }
+.ticket-actions input::placeholder { color: color-mix(in srgb, var(--mask-ink) 65%, transparent); }
+
+/* Slots */
+.group { display: grid; gap: 10px; }
+.group-head { display: flex; align-items: baseline; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+.group-head h2 { font-size: 20px; font-weight: 800; }
+.slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.slot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 12px 10px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.slot.off { background: transparent; border-style: dashed; }
+.slot.locked { border-color: var(--copper); box-shadow: inset 0 0 0 1px var(--copper); }
+.slot-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.rollchk { display: inline-flex; align-items: center; gap: 5px; font: 11px/1 var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
+.rollchk input { margin: 0; accent-color: var(--mask); }
+.value { font: 600 19px/1.2 var(--font-display); min-height: 2.4em; overflow-wrap: anywhere; }
+.value.none { color: var(--muted); font-weight: 600; font-size: 15px; }
+.value.spin { opacity: .45; }
+.meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-height: 20px; }
+.lvl { font: 11px/1 var(--font-mono); color: var(--muted); letter-spacing: .1em; }
+.chip { font: 500 11px/1 var(--font-mono); padding: 4px 7px; border-radius: 999px; background: var(--sunk); color: var(--muted); }
+.chip.warn { background: var(--warn-bg); color: var(--warn); }
+.slot-actions { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; }
+.slot-actions select { min-width: 0; width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 5px 6px; font-size: 13px; }
+.iconbtn { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; width: 34px; height: 32px; display: grid; place-items: center; color: var(--muted); padding: 0; }
+.iconbtn:hover { color: var(--ink); border-color: var(--muted); }
+.iconbtn[aria-pressed="true"] { background: var(--copper); border-color: var(--copper); color: var(--copper-ink); }
+.iconbtn svg { width: 16px; height: 16px; }
+
+/* Lower panels */
+.panels { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .panels { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
+.panel-head h2 { font-size: 22px; font-weight: 800; }
+.panel-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button { border: 1px solid var(--line); background: var(--bg); padding: 5px 11px; border-radius: 999px; font-size: 13px; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tabs button .n { font-family: var(--font-mono); font-size: 11px; opacity: .65; margin-left: 4px; }
+.bucket-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--sunk); border-radius: var(--r); }
+.bucket-bar h3 { font-size: 18px; }
+.bucket-bar .opts { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 13px; color: var(--muted); }
+.bucket-bar label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.bucket-bar input[type=checkbox] { accent-color: var(--mask); margin: 0; }
+.rows { display: grid; gap: 6px; }
+.rowh, .row { display: grid; grid-template-columns: minmax(0, 2.2fr) 92px minmax(0, 1.4fr) minmax(0, 1.2fr) auto; gap: 8px; align-items: center; }
+.rowh { font: 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 0 2px; }
+.row input[type=text], .row select, .addrow input, .addrow select { width: 100%; min-width: 0; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 6px 8px; font-size: 14px; }
+.row input.mono, .addrow input.mono { font-family: var(--font-mono); font-size: 12.5px; }
+.row.retired input, .row.retired select { opacity: .55; text-decoration: line-through; }
+.rowbtns { display: flex; gap: 6px; justify-content: flex-end; }
+.txtbtn { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 5px 10px; font-size: 13px; white-space: nowrap; }
+.txtbtn:hover { border-color: var(--muted); }
+.txtbtn.danger { color: #B3261E; border-color: color-mix(in srgb, #B3261E 40%, var(--line)); }
+.txtbtn.primary { background: var(--mask); color: var(--mask-ink); border-color: var(--mask); }
+.addrow { display: grid; grid-template-columns: minmax(0, 2.2fr) 92px minmax(0, 1.4fr) minmax(0, 1.2fr) auto; gap: 8px; align-items: center; padding-top: 10px; border-top: 1px dashed var(--line); }
+@media (max-width: 640px) {
+  .rowh { display: none; }
+  .row, .addrow { grid-template-columns: minmax(0, 1fr) 88px; padding: 8px; border: 1px solid var(--line); border-radius: var(--r); }
+  .row > :nth-child(1), .addrow > :nth-child(1) { grid-column: 1 / -1; }
+  .row > :nth-child(5), .addrow > :nth-child(5) { grid-column: 1 / -1; justify-content: flex-start; }
+}
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+.hint code, .note code { font-family: var(--font-mono); font-size: 12px; background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+.newbucket { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.newbucket input, .newbucket select { border: 1px solid var(--line); background: var(--bg); border-radius: 8px; padding: 6px 8px; font-size: 14px; min-width: 0; }
+.newbucket input { flex: 1 1 160px; }
+.log { display: grid; gap: 8px; max-height: 640px; overflow-y: auto; }
+.logitem { border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 4px; background: var(--bg); }
+.logitem .t { font: 600 15px/1.3 var(--font-display); overflow-wrap: anywhere; }
+.logitem .s { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.logitem .f { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 11px/1 var(--font-mono); color: var(--muted); }
+.logitem .f button { border: 0; background: none; color: var(--muted); font-size: 12px; text-decoration: underline; padding: 0; }
+.empty-state { color: var(--muted); font-size: 14px; padding: 18px; border: 1px dashed var(--line); border-radius: var(--r); text-align: left; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
+.toast.show { opacity: 1; }
+.readonly-note { font-size: 13px; color: var(--warn); background: var(--warn-bg); padding: 8px 12px; border-radius: var(--r); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="eyebrow">Rapid prototyping prompts</div>
+      <h1>Random Project <span>Generator</span></h1>
+      <p>Roll a handful of ingredients, keep what sparks something, re-roll the rest, and build it as far as it goes this week.</p>
+    </div>
+    <div class="controls">
+      <div class="dial" role="group" aria-label="Difficulty" id="dial"></div>
+      <button class="rollbtn" id="rollBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
+        Roll
+      </button>
+    </div>
+  </header>
+  <div class="ladder" id="ladder"></div>
+
+  <section class="ticket" aria-live="polite">
+    <div class="eyebrow" style="color:inherit;opacity:.75;position:relative;z-index:1">This week's project</div>
+    <div class="headline" id="headline"></div>
+    <div class="ticket-actions">
+      <button type="button" id="copyLine">Copy roll</button>
+      <button type="button" id="copyPrompt">Copy as AI brainstorm prompt</button>
+      <input type="text" id="rollTitle" placeholder="Working title (optional)" aria-label="Working title">
+      <button type="button" id="saveRoll">Save roll</button>
+    </div>
+  </section>
+
+  <div id="groups"></div>
+
+  <div class="panels">
+    <section class="panel">
+      <div class="panel-head"><div><h2>How it works</h2></div></div>
+      <p class="hint" style="font-size:14px;max-width:65ch">Hit <b>Roll</b> to spin every bucket ticked <b>Roll</b>. Lock the picks you like and re-roll the rest, or choose any bucket by hand. The difficulty dial filters ingredients and sets the build stage, from a dev board on a breadboard up to a bare module on a custom PCB with an enclosure.</p>
+      <p class="hint" style="font-size:14px;max-width:65ch">Ingredients carry simple compatibility tags, so a camera only comes up with a brain that can drive one, and a solenoid gets flagged if your power source can't handle it.</p>
+      <p class="hint" id="updated"></p>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><div><h2>Saved rolls</h2><p>Kept in this browser only.</p></div></div>
+      <div class="log" id="log"></div>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const LEVELS = {
+  1: { name: "Easy", ladder: "Dev board on a breadboard" },
+  2: { name: "Standard", ladder: "Dev board on an AI-designed carrier PCB" },
+  3: { name: "Showstopper", ladder: "Bare module on an AI-designed PCB, plus an enclosure" }
+};
+const GROUPS = ["Hardware", "Human", "Flavor"];
+const S = { state: "loading", buckets: [], items: [], generated: null, level: 2, picks: {}, locks: {}, rollOn: {}, warn: {}, rolls: [], confirmDel: null, spinning: false };
+const $ = (id) => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("hb:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("hb:" + k, JSON.stringify(v)); } catch (e) {} }
+};
+S.level = store.get("level", 2); S.picks = store.get("picks", {}); S.locks = store.get("locks", {}); S.rollOn = store.get("rollOn", {}); S.rolls = store.get("rolls", []);
+function persist() { store.set("level", S.level); store.set("picks", S.picks); store.set("locks", S.locks); store.set("rollOn", S.rollOn); store.set("rolls", S.rolls); }
+
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v;
+    else if (k === "text") n.textContent = v;
+    else if (k === "html") n.innerHTML = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) n.append(c.nodeType ? c : document.createTextNode(String(c)));
+  return n;
+}
+let toastT;
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2200); }
+
+const itemById = (id) => S.items.find((i) => i.id === id);
+const activeIn = (bid) => S.items.filter((i) => i.bucket === bid);
+const lvl = (i) => Number(i.level) || 1;
+const pickRand = (a) => a[Math.floor(Math.random() * a.length)];
+const isRolled = (b) => (b.id in S.rollOn ? S.rollOn[b.id] : !!b.rolled);
+const visibleBuckets = () => S.buckets.filter((b) => activeIn(b.id).length);
+
+function validate() {
+  const provided = new Set(); S.warn = {};
+  for (const b of S.buckets) {
+    const p = itemById(S.picks[b.id]); if (!p) continue;
+    const missing = (p.needs || []).filter((t) => !provided.has(t));
+    if (missing.length) S.warn[b.id] = missing;
+    (p.tags || []).forEach((t) => provided.add(t));
+  }
+}
+function roll(only) {
+  const provided = new Set();
+  for (const b of S.buckets) {
+    const cur = S.picks[b.id];
+    const go = only ? b.id === only : (isRolled(b) && !S.locks[b.id]);
+    if (go) {
+      const pool = activeIn(b.id).filter((i) => lvl(i) <= S.level);
+      let ok = pool.filter((i) => (i.needs || []).every((t) => provided.has(t)));
+      if (!ok.length) ok = pool;
+      const fresh = ok.length > 1 ? ok.filter((i) => i.id !== cur) : ok;
+      S.picks[b.id] = fresh.length ? pickRand(fresh).id : null;
+    }
+    const p = itemById(S.picks[b.id]); if (p) (p.tags || []).forEach((t) => provided.add(t));
+  }
+  validate(); persist(); spin(only);
+}
+function spin(only) {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { render(); return; }
+  S.spinning = only || true; let n = 0; render();
+  const iv = setInterval(() => {
+    document.querySelectorAll(".value.spin").forEach((v) => { const pool = activeIn(v.dataset.bucket); if (pool.length) v.textContent = pickRand(pool).label; });
+    if (++n > 7) { clearInterval(iv); S.spinning = false; render(); }
+  }, 55);
+}
+
+const rolledLine = () => S.buckets.map((b) => itemById(S.picks[b.id])).filter(Boolean).map((i) => i.label);
+function render() { renderDial(); renderTicket(); renderSlots(); renderLog(); }
+function renderDial() {
+  const d = $("dial"); d.replaceChildren();
+  for (const k of [1, 2, 3]) d.append(el("button", { type: "button", "aria-pressed": String(S.level === k), text: LEVELS[k].name, onclick: () => { S.level = k; persist(); render(); } }));
+  $("ladder").replaceChildren(el("span", { text: "Build stage: " }), el("b", { text: LEVELS[S.level].ladder }));
+}
+function renderTicket() {
+  const h = $("headline"); h.replaceChildren();
+  if (S.state === "loading") return h.append(el("span", { class: "empty", text: "Loading the pantry…" }));
+  if (S.state === "error") return h.append(el("span", { class: "empty", text: "The pantry didn't load. Refresh the page to try again." }));
+  const parts = rolledLine();
+  if (!parts.length) return h.append(el("span", { class: "empty", text: "Hit Roll to get this week's ingredients." }));
+  parts.forEach((p, i) => { if (i) h.append(el("span", { class: "dot", text: "·" })); h.append(p); });
+}
+const ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const ICON_DIE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/></svg>';
+function renderSlots() {
+  const wrap = $("groups"); wrap.replaceChildren();
+  const vb = visibleBuckets(); if (!vb.length) return;
+  const groups = [...GROUPS, ...new Set(vb.map((b) => b.group).filter((g) => !GROUPS.includes(g)))];
+  const out = el("div", { style: "display:grid;gap:22px" });
+  for (const g of groups) {
+    const bs = vb.filter((b) => (b.group || "Flavor") === g); if (!bs.length) continue;
+    out.append(el("section", { class: "group" },
+      el("div", { class: "group-head" }, el("h2", { text: g }), el("span", { class: "eyebrow", text: g === "Hardware" ? "what it's made of" : g === "Human" ? "who it's for and why" : "what makes it fun" })),
+      el("div", { class: "slots" }, bs.map(slotCard))));
+  }
+  wrap.append(out);
+}
+function slotCard(b) {
+  const p = itemById(S.picks[b.id]); const locked = !!S.locks[b.id]; const rolled = isRolled(b);
+  const spinning = S.spinning && (S.spinning === b.id || (S.spinning === true && rolled && !locked));
+  const opts = activeIn(b.id).slice().sort((a, c) => a.label.localeCompare(c.label));
+  const sel = el("select", { "aria-label": "Choose " + b.name, id: "pick-" + b.id, onchange: (e) => { S.picks[b.id] = e.target.value || null; validate(); persist(); render(); } },
+    el("option", { value: "", text: rolled ? "Pick by hand…" : "Your call…" }),
+    opts.map((i) => el("option", { value: i.id, text: i.label + (lvl(i) > S.level ? "  (harder)" : ""), selected: p && p.id === i.id })));
+  const meta = el("div", { class: "meta" });
+  if (p) meta.append(el("span", { class: "lvl", title: "Difficulty level " + lvl(p), text: "●".repeat(lvl(p)) + "○".repeat(3 - lvl(p)) }));
+  if (S.warn[b.id]) meta.append(el("span", { class: "chip warn", title: "Earlier picks don't provide this", text: "needs " + S.warn[b.id].join(", ") }));
+  return el("div", { class: "slot" + (rolled ? "" : " off") + (locked ? " locked" : "") },
+    el("div", { class: "slot-head" }, el("span", { class: "eyebrow", text: b.name }),
+      el("label", { class: "rollchk", title: "Include this bucket when you hit Roll" },
+        el("input", { type: "checkbox", id: "roll-" + b.id, checked: rolled, onchange: (e) => { S.rollOn[b.id] = e.target.checked; persist(); render(); } }), "Roll")),
+    el("div", { class: "value" + (p ? "" : " none") + (spinning ? " spin" : ""), "data-bucket": b.id, text: p ? p.label : (rolled ? "Not rolled yet" : "Your call") }),
+    meta,
+    el("div", { class: "slot-actions" }, sel,
+      el("button", { type: "button", class: "iconbtn", "aria-pressed": String(locked), "aria-label": (locked ? "Unlock " : "Lock ") + b.name, title: locked ? "Locked: Roll keeps this" : "Lock this pick", html: ICON_LOCK, onclick: () => { S.locks[b.id] = !locked; persist(); render(); } }),
+      el("button", { type: "button", class: "iconbtn", "aria-label": "Re-roll " + b.name, title: "Re-roll just this one", html: ICON_DIE, onclick: () => roll(b.id) })));
+}
+function renderLog() {
+  const log = $("log"); log.replaceChildren();
+  if (!S.rolls.length) return log.append(el("div", { class: "empty-state", text: "No saved rolls yet. Roll something you'd build, give it a working title, and hit Save roll." }));
+  for (const r of S.rolls) {
+    const when = r.at ? new Date(r.at).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }) : "";
+    const line = (r.picks || []).map((p) => p.label).join(" · ");
+    const del = S.confirmDel === r.at
+      ? el("span", { style: "display:inline-flex;gap:10px" }, el("button", { type: "button", text: "Confirm remove", onclick: () => { S.rolls = S.rolls.filter((x) => x.at !== r.at); S.confirmDel = null; persist(); renderLog(); } }), el("button", { type: "button", text: "Keep", onclick: () => { S.confirmDel = null; renderLog(); } }))
+      : el("span", { style: "display:inline-flex;gap:10px" }, el("button", { type: "button", text: "Copy", onclick: () => copyText((r.title ? r.title + ": " : "") + line, "Copied") }), el("button", { type: "button", text: "Remove", onclick: () => { S.confirmDel = r.at; renderLog(); } }));
+    log.append(el("div", { class: "logitem" }, el("div", { class: "t", text: r.title || (r.picks || []).map((p) => p.label).slice(0, 3).join(" · ") }), el("div", { class: "s", text: line }),
+      el("div", { class: "f" }, el("span", { text: [when, LEVELS[r.level] ? LEVELS[r.level].name : ""].filter(Boolean).join(" · ") }), del)));
+  }
+}
+
+async function copyText(text, msg) {
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch (e) { const ta = el("textarea", { style: "position:fixed;left:-9999px" }); ta.value = text; document.body.append(ta); ta.select(); try { document.execCommand("copy"); toast(msg); } catch (_) { toast("Select and copy the text by hand."); } ta.remove(); }
+}
+$("rollBtn").addEventListener("click", () => { if (S.items.length) roll(); });
+$("copyLine").addEventListener("click", () => { const p = rolledLine(); if (!p.length) return toast("Roll first."); copyText(p.join(" · "), "Roll copied"); });
+$("copyPrompt").addEventListener("click", () => {
+  const lines = S.buckets.map((b) => [b, itemById(S.picks[b.id])]).filter(([, i]) => i).map(([b, i]) => "- " + b.name + ": " + i.label);
+  if (!lines.length) return toast("Roll first.");
+  copyText("I'm planning a one-week rapid prototyping build. My random ingredients:\n" + lines.join("\n") + "\n- Build stage: " + LEVELS[S.level].ladder +
+    "\n\nSuggest 3 gadget concepts that use these ingredients. For each: a one-line pitch, who it's for, the single hardest technical question, a rough parts list, and what a satisfying 'it works' moment would look like. Keep them buildable in about a week.", "Prompt copied");
+});
+$("saveRoll").addEventListener("click", () => {
+  const picks = S.buckets.map((b) => [b, itemById(S.picks[b.id])]).filter(([, i]) => i).map(([b, i]) => ({ bucket: b.name, label: i.label }));
+  if (!picks.length) return toast("Roll first.");
+  S.rolls.unshift({ at: new Date().toISOString(), title: $("rollTitle").value.trim(), level: S.level, picks });
+  S.rolls = S.rolls.slice(0, 100); $("rollTitle").value = ""; persist(); renderLog(); toast("Saved");
+});
+
+render();
+fetch("pantry.json", { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }).then((data) => {
+  S.buckets = (data.buckets || []).slice().sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+  S.items = data.items || []; S.generated = data.generated; S.state = "ready";
+  for (const k of Object.keys(S.picks)) if (S.picks[k] && !itemById(S.picks[k])) delete S.picks[k];
+  if (S.generated) $("updated").textContent = S.items.length + " ingredients · pantry updated " + new Date(S.generated).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  validate(); render();
+}).catch(() => { S.state = "error"; render(); });
+</script>
+</body>
+</html>
