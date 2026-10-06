@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-06T19:57:31Z",
+ "generated": "2026-10-06T20:09:09Z",
  "buckets": [
   {
    "id": "recEFDwxASXrgScWX",
@@ -929,9 +929,57 @@
    "needs": []
   },
   {
+   "id": "recAgvxEqRPViTxnH",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Aquarium keeper",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec2R7xoXLxSIPBvE",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Camper / backpacker",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recHlLMLJG8JpGcjQ",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Coffee nerd",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recaIAQDiF8Vj3JBW",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Cosplayer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "reckna1wclIMgpjAh",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Cyclist",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recRg76PIBnUGmK73",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Everyday-carry enthusiast",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recyZg41vQS32CCmX",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Frequent traveler",
    "level": 1,
    "tags": [],
    "needs": []
@@ -961,9 +1009,25 @@
    "needs": []
   },
   {
+   "id": "recg7W3wRVHgZMwao",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Home brewer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recrTPKdzsoItgGzR",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Home cook",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "reck0Hdabnh6vJaWJ",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Home gym athlete",
    "level": 1,
    "tags": [],
    "needs": []
@@ -985,6 +1049,14 @@
    "needs": []
   },
   {
+   "id": "recxshVxeiOrfdQS0",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "New parent",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recyOhNxaKwnoF3mb",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Night-shift worker",
@@ -1001,6 +1073,22 @@
    "needs": []
   },
   {
+   "id": "recI2Prh7XHBPfIDU",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Photographer / filmmaker",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec8BkGdVwtwCCYbR",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Remote worker",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recwl4HCNwi7WCUFa",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Runner",
@@ -1012,6 +1100,14 @@
    "id": "rec5NOd8K3BZGKCRa",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Student",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recEADBMaUXhMzKT9",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Tabletop gamer",
    "level": 1,
    "tags": [],
    "needs": []
