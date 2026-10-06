@@ -20,14 +20,13 @@ Buckets with no active ingredients are hidden on the public page, so you can set
 
 ## Publishing changes
 
-The workflow in `.github/workflows/site.yml` pulls Airtable into `pantry.json`, commits it if anything changed, and deploys to GitHub Pages. It runs:
+GitHub Pages serves the site straight from the `main` branch. The workflow in `.github/workflows/site.yml` pulls Airtable into `pantry.json` and commits it whenever something changed, which republishes the site. It runs:
 
 - daily at 05:17 UTC,
-- on every push to `main`,
 - when you press **Run workflow** on the Actions tab,
 - when something sends a `sync-pantry` repository dispatch (for example an Airtable automation).
 
-It needs one repository secret, `AIRTABLE_TOKEN`: an Airtable personal access token with the `data.records:read` scope, limited to that base. Without it, the workflow publishes the `pantry.json` already in the repo.
+It needs one repository secret, `AIRTABLE_TOKEN`: an Airtable personal access token with the `data.records:read` scope, limited to the generator's base. Without it, the site keeps the `pantry.json` already in the repo.
 
 To run the sync locally:
 
