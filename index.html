@@ -194,7 +194,7 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
   <div class="panels">
     <section class="panel">
       <div class="panel-head"><div><h2>How it works</h2></div></div>
-      <p class="hint" style="font-size:14px;max-width:65ch">Hit <b>Roll</b> to spin every bucket ticked <b>Roll</b>. Lock the picks you like and re-roll the rest, or choose any bucket by hand. The difficulty dial filters ingredients and sets the build stage, from a dev board on a breadboard up to a bare module on a custom PCB with an enclosure.</p>
+      <p class="hint" style="font-size:14px;max-width:65ch">Hit <b>Roll</b> to spin every category ticked <b>Include</b>. Untick a category to leave it out of the result, lock the picks you like and re-roll the rest, or choose any category by hand. The difficulty dial filters ingredients and sets the build stage, from a dev board on a breadboard up to a bare module on a custom PCB with an enclosure.</p>
       <p class="hint" style="font-size:14px;max-width:65ch">Ingredients carry simple compatibility tags, so a camera only comes up with a brain that can drive one, and a solenoid gets flagged if your power source can't handle it.</p>
       <p class="hint" id="updated"></p>
     </section>
@@ -244,11 +244,13 @@ const lvl = (i) => Number(i.level) || 1;
 const pickRand = (a) => a[Math.floor(Math.random() * a.length)];
 const isRolled = (b) => (b.id in S.rollOn ? S.rollOn[b.id] : !!b.rolled);
 const visibleBuckets = () => S.buckets.filter((b) => activeIn(b.id).length);
+// Buckets that are ticked Include and visible, with their current pick.
+const included = () => visibleBuckets().filter(isRolled).map((b) => [b, itemById(S.picks[b.id])]).filter(([, i]) => i);
 
 function validate() {
   const provided = new Set(); S.warn = {};
   for (const b of S.buckets) {
-    const p = itemById(S.picks[b.id]); if (!p) continue;
+    const p = isRolled(b) ? itemById(S.picks[b.id]) : null; if (!p) continue;
     const missing = (p.needs || []).filter((t) => !provided.has(t));
     if (missing.length) S.warn[b.id] = missing;
     (p.tags || []).forEach((t) => provided.add(t));
@@ -266,7 +268,7 @@ function roll(only) {
       const fresh = ok.length > 1 ? ok.filter((i) => i.id !== cur) : ok;
       S.picks[b.id] = fresh.length ? pickRand(fresh).id : null;
     }
-    const p = itemById(S.picks[b.id]); if (p) (p.tags || []).forEach((t) => provided.add(t));
+    const p = isRolled(b) ? itemById(S.picks[b.id]) : null; if (p) (p.tags || []).forEach((t) => provided.add(t));
   }
   validate(); persist(); spin(only);
 }
@@ -279,7 +281,7 @@ function spin(only) {
   }, 55);
 }
 
-const rolledLine = () => S.buckets.map((b) => itemById(S.picks[b.id])).filter(Boolean).map((i) => i.label);
+const rolledLine = () => included().map(([, i]) => i.label);
 function render() { renderDial(); renderTicket(); renderSlots(); renderLog(); }
 function renderDial() {
   const d = $("dial"); d.replaceChildren();
@@ -311,19 +313,22 @@ function renderSlots() {
 }
 function slotCard(b) {
   const p = itemById(S.picks[b.id]); const locked = !!S.locks[b.id]; const rolled = isRolled(b);
-  const spinning = S.spinning && (S.spinning === b.id || (S.spinning === true && rolled && !locked));
+  const spinning = rolled && S.spinning && (S.spinning === b.id || (S.spinning === true && !locked));
   const opts = activeIn(b.id).slice().sort((a, c) => a.label.localeCompare(c.label));
-  const sel = el("select", { "aria-label": "Choose " + b.name, id: "pick-" + b.id, onchange: (e) => { S.picks[b.id] = e.target.value || null; validate(); persist(); render(); } },
-    el("option", { value: "", text: rolled ? "Pick by hand…" : "Your call…" }),
+  const sel = el("select", { "aria-label": "Choose " + b.name, id: "pick-" + b.id, onchange: (e) => { S.picks[b.id] = e.target.value || null; if (e.target.value) S.rollOn[b.id] = true; validate(); persist(); render(); } },
+    el("option", { value: "", text: "Pick by hand…" }),
     opts.map((i) => el("option", { value: i.id, text: i.label + (lvl(i) > S.level ? "  (harder)" : ""), selected: p && p.id === i.id })));
   const meta = el("div", { class: "meta" });
-  if (p) meta.append(el("span", { class: "lvl", title: "Difficulty level " + lvl(p), text: "●".repeat(lvl(p)) + "○".repeat(3 - lvl(p)) }));
+  if (p && rolled) meta.append(el("span", { class: "lvl", title: "Difficulty level " + lvl(p), text: "●".repeat(lvl(p)) + "○".repeat(3 - lvl(p)) }));
   if (S.warn[b.id]) meta.append(el("span", { class: "chip warn", title: "Earlier picks don't provide this", text: "needs " + S.warn[b.id].join(", ") }));
   return el("div", { class: "slot" + (rolled ? "" : " off") + (locked ? " locked" : "") },
     el("div", { class: "slot-head" }, el("span", { class: "eyebrow", text: b.name }),
-      el("label", { class: "rollchk", title: "Include this bucket when you hit Roll" },
-        el("input", { type: "checkbox", id: "roll-" + b.id, checked: rolled, onchange: (e) => { S.rollOn[b.id] = e.target.checked; persist(); render(); } }), "Roll")),
-    el("div", { class: "value" + (p ? "" : " none") + (spinning ? " spin" : ""), "data-bucket": b.id, text: p ? p.label : (rolled ? "Not rolled yet" : "Your call") }),
+      el("label", { class: "rollchk", title: "Include this category in the roll and the result" },
+        el("input", { type: "checkbox", id: "roll-" + b.id, checked: rolled, onchange: (e) => {
+          S.rollOn[b.id] = e.target.checked; persist();
+          if (e.target.checked && !itemById(S.picks[b.id])) roll(b.id); else { validate(); render(); }
+        } }), "Include")),
+    el("div", { class: "value" + (p && rolled ? "" : " none") + (spinning ? " spin" : ""), "data-bucket": b.id, text: !rolled ? "Left out" : p ? p.label : "Not rolled yet" }),
     meta,
     el("div", { class: "slot-actions" }, sel,
       el("button", { type: "button", class: "iconbtn", "aria-pressed": String(locked), "aria-label": (locked ? "Unlock " : "Lock ") + b.name, title: locked ? "Locked: Roll keeps this" : "Lock this pick", html: ICON_LOCK, onclick: () => { S.locks[b.id] = !locked; persist(); render(); } }),
@@ -350,13 +355,13 @@ async function copyText(text, msg) {
 $("rollBtn").addEventListener("click", () => { if (S.items.length) roll(); });
 $("copyLine").addEventListener("click", () => { const p = rolledLine(); if (!p.length) return toast("Roll first."); copyText(p.join(" · "), "Roll copied"); });
 $("copyPrompt").addEventListener("click", () => {
-  const lines = S.buckets.map((b) => [b, itemById(S.picks[b.id])]).filter(([, i]) => i).map(([b, i]) => "- " + b.name + ": " + i.label);
+  const lines = included().map(([b, i]) => "- " + b.name + ": " + i.label);
   if (!lines.length) return toast("Roll first.");
   copyText("I'm planning a one-week rapid prototyping build. My random ingredients:\n" + lines.join("\n") + "\n- Build stage: " + LEVELS[S.level].ladder +
     "\n\nSuggest 3 gadget concepts that use these ingredients. For each: a one-line pitch, who it's for, the single hardest technical question, a rough parts list, and what a satisfying 'it works' moment would look like. Keep them buildable in about a week.", "Prompt copied");
 });
 $("saveRoll").addEventListener("click", () => {
-  const picks = S.buckets.map((b) => [b, itemById(S.picks[b.id])]).filter(([, i]) => i).map(([b, i]) => ({ bucket: b.name, label: i.label }));
+  const picks = included().map(([b, i]) => ({ bucket: b.name, label: i.label }));
   if (!picks.length) return toast("Roll first.");
   S.rolls.unshift({ at: new Date().toISOString(), title: $("rollTitle").value.trim(), level: S.level, picks });
   S.rolls = S.rolls.slice(0, 100); $("rollTitle").value = ""; persist(); renderLog(); toast("Saved");
