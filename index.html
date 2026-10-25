@@ -61,14 +61,9 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
 
 /* Controls */
 .controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; }
-.dial { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
-.dial button { border: 0; background: transparent; padding: 7px 14px; border-radius: 999px; font-weight: 500; font-size: 14px; color: var(--muted); }
-.dial button[aria-pressed="true"] { background: var(--mask); color: var(--mask-ink); }
 .rollbtn { border: 0; background: var(--copper); color: var(--copper-ink); font: 800 20px/1 var(--font-display); padding: 14px 26px; border-radius: 999px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 3px 0 color-mix(in srgb, var(--copper) 55%, var(--ink)); transition: transform .08s; }
 .rollbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 color-mix(in srgb, var(--copper) 55%, var(--ink)); }
 .rollbtn svg { width: 22px; height: 22px; }
-.ladder { font: 13px/1.4 var(--font-mono); color: var(--muted); }
-.ladder b { color: var(--ink); font-weight: 500; }
 
 /* Ticket */
 .ticket { background: var(--mask); color: var(--mask-ink); border-radius: 14px; padding: 22px 24px; display: grid; gap: 14px; position: relative; overflow: hidden; }
@@ -98,7 +93,6 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
 .value.none { color: var(--muted); font-weight: 600; font-size: 15px; }
 .value.spin { opacity: .45; }
 .meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-height: 20px; }
-.lvl { font: 11px/1 var(--font-mono); color: var(--muted); letter-spacing: .1em; }
 .chip { font: 500 11px/1 var(--font-mono); padding: 4px 7px; border-radius: 999px; background: var(--sunk); color: var(--muted); }
 .chip.warn { background: var(--warn-bg); color: var(--warn); }
 .slot-actions { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; }
@@ -169,14 +163,12 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
       <p>Roll a handful of ingredients, keep what sparks something, re-roll the rest, and build it as far as it goes this week.</p>
     </div>
     <div class="controls">
-      <div class="dial" role="group" aria-label="Difficulty" id="dial"></div>
       <button class="rollbtn" id="rollBtn" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
         Roll
       </button>
     </div>
   </header>
-  <div class="ladder" id="ladder"></div>
 
   <section class="ticket" aria-live="polite">
     <div class="eyebrow" style="color:inherit;opacity:.75;position:relative;z-index:1">This week's project</div>
@@ -194,7 +186,7 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
   <div class="panels">
     <section class="panel">
       <div class="panel-head"><div><h2>How it works</h2></div></div>
-      <p class="hint" style="font-size:14px;max-width:65ch">Hit <b>Roll</b> to spin every category ticked <b>Include</b>. Untick a category to leave it out of the result, lock the picks you like and re-roll the rest, or choose any category by hand. The difficulty dial filters ingredients and sets the build stage, from a dev board on a breadboard up to a bare module on a custom PCB with an enclosure.</p>
+      <p class="hint" style="font-size:14px;max-width:65ch">Hit <b>Roll</b> to spin every category ticked <b>Include</b>. Untick a category to leave it out of the result, lock the picks you like and re-roll the rest, or choose any category by hand.</p>
       <p class="hint" style="font-size:14px;max-width:65ch">Ingredients carry simple compatibility tags, so a camera only comes up with a brain that can drive one, and a solenoid gets flagged if your power source can't handle it.</p>
       <p class="hint" id="updated"></p>
     </section>
@@ -207,20 +199,15 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
 <div class="toast" id="toast" role="status"></div>
 
 <script>
-const LEVELS = {
-  1: { name: "Easy", ladder: "Dev board on a breadboard" },
-  2: { name: "Standard", ladder: "Dev board on an AI-designed carrier PCB" },
-  3: { name: "Showstopper", ladder: "Bare module on an AI-designed PCB, plus an enclosure" }
-};
 const GROUPS = ["Hardware", "Human", "Flavor"];
-const S = { state: "loading", buckets: [], items: [], generated: null, level: 2, picks: {}, locks: {}, rollOn: {}, warn: {}, rolls: [], confirmDel: null, spinning: false };
+const S = { state: "loading", buckets: [], items: [], generated: null, picks: {}, locks: {}, rollOn: {}, warn: {}, rolls: [], confirmDel: null, spinning: false };
 const $ = (id) => document.getElementById(id);
 const store = {
   get(k, d) { try { const v = localStorage.getItem("hb:" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem("hb:" + k, JSON.stringify(v)); } catch (e) {} }
 };
-S.level = store.get("level", 2); S.picks = store.get("picks", {}); S.locks = store.get("locks", {}); S.rollOn = store.get("rollOn", {}); S.rolls = store.get("rolls", []);
-function persist() { store.set("level", S.level); store.set("picks", S.picks); store.set("locks", S.locks); store.set("rollOn", S.rollOn); store.set("rolls", S.rolls); }
+S.picks = store.get("picks", {}); S.locks = store.get("locks", {}); S.rollOn = store.get("rollOn", {}); S.rolls = store.get("rolls", []);
+function persist() { store.set("picks", S.picks); store.set("locks", S.locks); store.set("rollOn", S.rollOn); store.set("rolls", S.rolls); }
 
 function el(tag, attrs, ...kids) {
   const n = document.createElement(tag);
@@ -240,7 +227,6 @@ function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add
 
 const itemById = (id) => S.items.find((i) => i.id === id);
 const activeIn = (bid) => S.items.filter((i) => i.bucket === bid);
-const lvl = (i) => Number(i.level) || 1;
 const pickRand = (a) => a[Math.floor(Math.random() * a.length)];
 const isRolled = (b) => (b.id in S.rollOn ? S.rollOn[b.id] : !!b.rolled);
 const visibleBuckets = () => S.buckets.filter((b) => activeIn(b.id).length);
@@ -262,7 +248,7 @@ function roll(only) {
     const cur = S.picks[b.id];
     const go = only ? b.id === only : (isRolled(b) && !S.locks[b.id]);
     if (go) {
-      const pool = activeIn(b.id).filter((i) => lvl(i) <= S.level);
+      const pool = activeIn(b.id);
       let ok = pool.filter((i) => (i.needs || []).every((t) => provided.has(t)));
       if (!ok.length) ok = pool;
       const fresh = ok.length > 1 ? ok.filter((i) => i.id !== cur) : ok;
@@ -282,12 +268,7 @@ function spin(only) {
 }
 
 const rolledLine = () => included().map(([, i]) => i.label);
-function render() { renderDial(); renderTicket(); renderSlots(); renderLog(); }
-function renderDial() {
-  const d = $("dial"); d.replaceChildren();
-  for (const k of [1, 2, 3]) d.append(el("button", { type: "button", "aria-pressed": String(S.level === k), text: LEVELS[k].name, onclick: () => { S.level = k; persist(); render(); } }));
-  $("ladder").replaceChildren(el("span", { text: "Build stage: " }), el("b", { text: LEVELS[S.level].ladder }));
-}
+function render() { renderTicket(); renderSlots(); renderLog(); }
 function renderTicket() {
   const h = $("headline"); h.replaceChildren();
   if (S.state === "loading") return h.append(el("span", { class: "empty", text: "Loading the pantry…" }));
@@ -317,9 +298,8 @@ function slotCard(b) {
   const opts = activeIn(b.id).slice().sort((a, c) => a.label.localeCompare(c.label));
   const sel = el("select", { "aria-label": "Choose " + b.name, id: "pick-" + b.id, onchange: (e) => { S.picks[b.id] = e.target.value || null; if (e.target.value) S.rollOn[b.id] = true; validate(); persist(); render(); } },
     el("option", { value: "", text: "Pick by hand…" }),
-    opts.map((i) => el("option", { value: i.id, text: i.label + (lvl(i) > S.level ? "  (harder)" : ""), selected: p && p.id === i.id })));
+    opts.map((i) => el("option", { value: i.id, text: i.label, selected: p && p.id === i.id })));
   const meta = el("div", { class: "meta" });
-  if (p && rolled) meta.append(el("span", { class: "lvl", title: "Difficulty level " + lvl(p), text: "●".repeat(lvl(p)) + "○".repeat(3 - lvl(p)) }));
   if (S.warn[b.id]) meta.append(el("span", { class: "chip warn", title: "Earlier picks don't provide this", text: "needs " + S.warn[b.id].join(", ") }));
   return el("div", { class: "slot" + (rolled ? "" : " off") + (locked ? " locked" : "") },
     el("div", { class: "slot-head" }, el("span", { class: "eyebrow", text: b.name }),
@@ -344,7 +324,7 @@ function renderLog() {
       ? el("span", { style: "display:inline-flex;gap:10px" }, el("button", { type: "button", text: "Confirm remove", onclick: () => { S.rolls = S.rolls.filter((x) => x.at !== r.at); S.confirmDel = null; persist(); renderLog(); } }), el("button", { type: "button", text: "Keep", onclick: () => { S.confirmDel = null; renderLog(); } }))
       : el("span", { style: "display:inline-flex;gap:10px" }, el("button", { type: "button", text: "Copy", onclick: () => copyText((r.title ? r.title + ": " : "") + line, "Copied") }), el("button", { type: "button", text: "Remove", onclick: () => { S.confirmDel = r.at; renderLog(); } }));
     log.append(el("div", { class: "logitem" }, el("div", { class: "t", text: r.title || (r.picks || []).map((p) => p.label).slice(0, 3).join(" · ") }), el("div", { class: "s", text: line }),
-      el("div", { class: "f" }, el("span", { text: [when, LEVELS[r.level] ? LEVELS[r.level].name : ""].filter(Boolean).join(" · ") }), del)));
+      el("div", { class: "f" }, el("span", { text: when }), del)));
   }
 }
 
@@ -357,13 +337,13 @@ $("copyLine").addEventListener("click", () => { const p = rolledLine(); if (!p.l
 $("copyPrompt").addEventListener("click", () => {
   const lines = included().map(([b, i]) => "- " + b.name + ": " + i.label);
   if (!lines.length) return toast("Roll first.");
-  copyText("I'm planning a one-week rapid prototyping build. My random ingredients:\n" + lines.join("\n") + "\n- Build stage: " + LEVELS[S.level].ladder +
+  copyText("I'm planning a one-week rapid prototyping build. My random ingredients:\n" + lines.join("\n") +
     "\n\nSuggest 3 gadget concepts that use these ingredients. For each: a one-line pitch, who it's for, the single hardest technical question, a rough parts list, and what a satisfying 'it works' moment would look like. Keep them buildable in about a week.", "Prompt copied");
 });
 $("saveRoll").addEventListener("click", () => {
   const picks = included().map(([b, i]) => ({ bucket: b.name, label: i.label }));
   if (!picks.length) return toast("Roll first.");
-  S.rolls.unshift({ at: new Date().toISOString(), title: $("rollTitle").value.trim(), level: S.level, picks });
+  S.rolls.unshift({ at: new Date().toISOString(), title: $("rollTitle").value.trim(), picks });
   S.rolls = S.rolls.slice(0, 100); $("rollTitle").value = ""; persist(); renderLog(); toast("Saved");
 });
 
