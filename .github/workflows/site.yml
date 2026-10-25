@@ -1,6 +1,8 @@
-name: Sync pantry from Airtable
+name: Sync pantry and publish site
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:        # "Run workflow" button on the Actions tab
   schedule:
     - cron: "17 5 * * *"    # daily at 05:17 UTC
@@ -9,13 +11,15 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: sync-pantry
+  group: site
   cancel-in-progress: false
 
 jobs:
-  sync:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,3 +47,18 @@ jobs:
             git commit -m "Sync pantry from Airtable"
             git push
           fi
+      - name: Collect site files
+        run: mkdir _site && cp index.html pantry.json _site/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
