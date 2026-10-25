@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-06T20:09:09Z",
+ "generated": "2026-10-25T07:46:39Z",
  "buckets": [
   {
    "id": "recEFDwxASXrgScWX",
@@ -96,12 +96,48 @@
    "needs": []
   },
   {
+   "id": "recBYOi0XZr9c4l0U",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Analog gauge needle",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rech1909DZu8ygyXQ",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "DC gear motor",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
    "id": "recPfIzcI2LsJEnhl",
    "bucket": "rec00Zi8lKsyANiiy",
    "label": "E-ink display",
    "level": 2,
    "tags": [],
    "needs": []
+  },
+  {
+   "id": "recpE0tI9tN6drB7N",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "EL wire",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recykOq1EYlcZwqjL",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Electromagnet",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
   },
   {
    "id": "recV9fNqB17NBr0i2",
@@ -120,6 +156,60 @@
    "needs": []
   },
   {
+   "id": "recKttv0zEGjazl3a",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Heating element",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
+   "id": "rec0vB95zK85aX9en",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "IR blaster (TV remote)",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recOjzT6kTtI7qH7D",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Laser pointer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recVFvUzgzb4bRkyB",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "LED matrix",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recsbjzcdi66dpX2g",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Linear actuator",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
+   "id": "recmM9ESdkhbq0OpJ",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Peltier cooler",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
    "id": "recDiK3fpLGBCAIEl",
    "bucket": "rec00Zi8lKsyANiiy",
    "label": "Piezo buzzer",
@@ -128,9 +218,33 @@
    "needs": []
   },
   {
+   "id": "recOsOdY71MsIcbjm",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Relay (switch a lamp or appliance)",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recrS13RhIyIhBpOb",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Round TFT display",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recMoSkPlBgYiYl2E",
    "bucket": "rec00Zi8lKsyANiiy",
    "label": "Servo",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recM4mLhsJS0fTRbi",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Seven-segment display",
    "level": 1,
    "tags": [],
    "needs": []
@@ -162,6 +276,16 @@
    "needs": []
   },
   {
+   "id": "recH73BwWd1aO06Kf",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Split-flap display",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
    "id": "reclzWluM07r3WS2y",
    "bucket": "rec00Zi8lKsyANiiy",
    "label": "Stepper motor",
@@ -182,6 +306,24 @@
    ]
   },
   {
+   "id": "recEgJhgkTA5zW8Eb",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Ultrasonic mister",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recSYCHaF0v8vg03p",
+   "bucket": "rec00Zi8lKsyANiiy",
+   "label": "Water pump",
+   "level": 1,
+   "tags": [],
+   "needs": [
+    "high-current"
+   ]
+  },
+  {
    "id": "rec6h1kULyXuJ1QBJ",
    "bucket": "rec0OwmeoEliDzbg1",
    "label": "Built into a found object",
@@ -190,10 +332,82 @@
    "needs": []
   },
   {
+   "id": "recCjxFTJnkum61on",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Changes with the time of day",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recumOfXcfEojWXS7",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Completely silent",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rectyrV9RHARPywzk",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Controlled by voice",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recGd16VmkAf56RgX",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Controlled only by tilting",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "reck58l0wLds8Kyae",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Does something different every day",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "rec5a0DGrsoqLkTqo",
    "bucket": "rec0OwmeoEliDzbg1",
    "label": "Fits in a matchbox",
    "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recPawey2jmIRlqLj",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Glows in the dark",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recvwlmzcwE1qclxL",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Has a personality",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recLl93cgwaNUSeqL",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Light is its only output",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recAsUNmNiXjaGHd8",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Made from recycled parts",
+   "level": 1,
    "tags": [],
    "needs": []
   },
@@ -209,6 +423,14 @@
    "id": "recdGapisTdAwYQjk",
    "bucket": "rec0OwmeoEliDzbg1",
    "label": "No app",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recJNchBAXh3CfYmZ",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "No batteries",
    "level": 1,
    "tags": [],
    "needs": []
@@ -230,10 +452,34 @@
    "needs": []
   },
   {
+   "id": "recByJys1ZEeAOMQc",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Reacts to music",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec8OSeQS5sfboCrZ",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Reacts to the weather",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recrUNnoeLczj77hV",
    "bucket": "rec0OwmeoEliDzbg1",
    "label": "Runs a year on battery",
    "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recqrE6cnaOx4wsSH",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Survives being dropped",
+   "level": 1,
    "tags": [],
    "needs": []
   },
@@ -254,10 +500,34 @@
    "needs": []
   },
   {
+   "id": "recwcpGyk69qfgloI",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Usable without looking at it",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rechh3ocYCWrjoU6y",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Uses a part you already own",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recKUER1SQPsoOEn3",
    "bucket": "rec0OwmeoEliDzbg1",
    "label": "Waterproof",
    "level": 3,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recyar2buwY1htoql",
+   "bucket": "rec0OwmeoEliDzbg1",
+   "label": "Works fully offline",
+   "level": 1,
    "tags": [],
    "needs": []
   },
@@ -316,53 +586,10 @@
    "needs": []
   },
   {
-   "id": "rec7BzaIl2LyfLRtH",
-   "bucket": "recEFDwxASXrgScWX",
-   "label": "ATtiny1616",
-   "level": 1,
-   "tags": [
-    "lowpower"
-   ],
-   "needs": []
-  },
-  {
-   "id": "recXUWekHRljAtufx",
-   "bucket": "recEFDwxASXrgScWX",
-   "label": "CH32V003",
-   "level": 2,
-   "tags": [
-    "lowpower"
-   ],
-   "needs": []
-  },
-  {
    "id": "rec1z7Qd9HuXBsSqq",
    "bucket": "recEFDwxASXrgScWX",
-   "label": "ESP32-C3",
+   "label": "ESP32",
    "level": 1,
-   "tags": [
-    "wifi",
-    "ble"
-   ],
-   "needs": []
-  },
-  {
-   "id": "recrvSZU8xpw7rJL2",
-   "bucket": "recEFDwxASXrgScWX",
-   "label": "ESP32-C6",
-   "level": 2,
-   "tags": [
-    "wifi",
-    "ble",
-    "thread"
-   ],
-   "needs": []
-  },
-  {
-   "id": "recTySfhyxMldrXMU",
-   "bucket": "recEFDwxASXrgScWX",
-   "label": "ESP32-S3",
-   "level": 2,
    "tags": [
     "wifi",
     "ble",
@@ -378,7 +605,6 @@
    "level": 2,
    "tags": [
     "ble",
-    "thread",
     "usb",
     "lowpower"
    ],
@@ -387,7 +613,7 @@
   {
    "id": "recH5MmzuuY6miBxQ",
    "bucket": "recEFDwxASXrgScWX",
-   "label": "Raspberry Pi Pico 2 W",
+   "label": "Pi Pico",
    "level": 1,
    "tags": [
     "wifi",
@@ -397,11 +623,14 @@
    "needs": []
   },
   {
-   "id": "rec4NcNlIukwkVx58",
+   "id": "recTHYUi28C3wEDYg",
    "bucket": "recEFDwxASXrgScWX",
-   "label": "RP2350 (Pico 2)",
+   "label": "Raspberry Pi",
    "level": 1,
    "tags": [
+    "wifi",
+    "ble",
+    "camera-ok",
     "usb"
    ],
    "needs": []
@@ -595,16 +824,6 @@
    "needs": []
   },
   {
-   "id": "recM3QkrGqoTNoobZ",
-   "bucket": "recR9kmDEJLsJNEbQ",
-   "label": "Matter over Thread",
-   "level": 3,
-   "tags": [],
-   "needs": [
-    "thread"
-   ]
-  },
-  {
    "id": "recO5hh5f0AxV5Va7",
    "bucket": "recR9kmDEJLsJNEbQ",
    "label": "NFC",
@@ -639,6 +858,22 @@
    "needs": []
   },
   {
+   "id": "rec3oZHLXkTqgfxKC",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Arcade cabinet",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recK0yje7AagxzQvR",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Art deco",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "rec5fuvpuK3EBTT82",
    "bucket": "recUOXtw0iGLnSwyh",
    "label": "Barcelona modernisme",
@@ -650,6 +885,38 @@
    "id": "rectrp6SCxxdTHv7X",
    "bucket": "recUOXtw0iGLnSwyh",
    "label": "Bauhaus",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec1jR461mxjMCzP2",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Brutalist",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec9NaGmhijzDujOF",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Cardboard prototype",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recEPVFIHKFVckSlv",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Chunky toy",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recDpipl7MWGFrwC9",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Cottagecore",
    "level": 1,
    "tags": [],
    "needs": []
@@ -679,9 +946,25 @@
    "needs": []
   },
   {
+   "id": "recNzmcOsw7b8l4Ns",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Lab equipment",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recf2f5a90CyWhUiv",
    "bucket": "recUOXtw0iGLnSwyh",
    "label": "Luxury",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec175WxO3Rnqypot",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Memphis design",
    "level": 1,
    "tags": [],
    "needs": []
@@ -695,9 +978,33 @@
    "needs": []
   },
   {
+   "id": "reccUGxWGqO4O1T04",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Military surplus",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "reccHKmSjcCNhVSv0",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Neon diner",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recbkjMOJE694tUb3",
    "bucket": "recUOXtw0iGLnSwyh",
    "label": "Retro-futurist",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recuEJqv1FiGtoQPV",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Scandinavian minimal",
    "level": 1,
    "tags": [],
    "needs": []
@@ -711,6 +1018,14 @@
    "needs": []
   },
   {
+   "id": "rec9gZAFJ8kEAOVFS",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Space age",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recG5ujmXSTyC7Tks",
    "bucket": "recUOXtw0iGLnSwyh",
    "label": "Steampunk",
@@ -719,9 +1034,49 @@
    "needs": []
   },
   {
+   "id": "rec7zZFBp8yy454FS",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Tiki",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "reccMM1snlezXfgtS",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Vaporwave",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recTYtK7sgsySrCCY",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Victorian curiosity",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recXFqhlt9P10hPJL",
+   "bucket": "recUOXtw0iGLnSwyh",
+   "label": "Vintage radio",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recumNp6VLoSfHBzU",
    "bucket": "recUOXtw0iGLnSwyh",
    "label": "Y2K",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recCIiBm1JElRMjgh",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Backpack add-on",
    "level": 1,
    "tags": [],
    "needs": []
@@ -751,9 +1106,57 @@
    "needs": []
   },
   {
+   "id": "recnrzFip2fuwDBcE",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Clock",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recI5gJYiwaPpWyBu",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Coaster",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recHrl1wMVV6Xa6jO",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Cube",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recGDM6ghtWDEUZGA",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Desk lamp",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recArQKZIK4I5NKw5",
    "bucket": "recUrKQcoYCXUj8eo",
    "label": "Desktop toy",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recUA0wVgyezfjKNh",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Fridge magnet",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recZqhe2uxMjDfLBP",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Glasses",
    "level": 1,
    "tags": [],
    "needs": []
@@ -775,6 +1178,38 @@
    "needs": []
   },
   {
+   "id": "rec0A9BUJ1fGoIxv1",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Pendant",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recGaqYbYce54hrtU",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Pet collar",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recoqUuTbhLBVTWAe",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Picture frame",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recVP0amojITmSsfC",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Plant pot",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "rec8ycI4Z7TlcSTgI",
    "bucket": "recUrKQcoYCXUj8eo",
    "label": "Plush",
@@ -791,6 +1226,38 @@
    "needs": []
   },
   {
+   "id": "recBRpesbl9qMS9jV",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Ring",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recd9xUXKRg0kgVMt",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Shoe clip",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recSAQ5UWJK0bFSdF",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Snow globe",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recC8ggk4OXfka6tB",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Tiny robot",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recnoJFudOEWCyy2J",
    "bucket": "recUrKQcoYCXUj8eo",
    "label": "Wall-mounted",
@@ -802,6 +1269,14 @@
    "id": "recD5Cjb7UFUSwn0j",
    "bucket": "recUrKQcoYCXUj8eo",
    "label": "Wearable",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recD5uDzCo8PMywW0",
+   "bucket": "recUrKQcoYCXUj8eo",
+   "label": "Wristband",
    "level": 1,
    "tags": [],
    "needs": []
@@ -929,9 +1404,33 @@
    "needs": []
   },
   {
+   "id": "rec0siwXFDVS5wL1Z",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Angler",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recAgvxEqRPViTxnH",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Aquarium keeper",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recgPzvNtaDj0v5Q4",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Beekeeper",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "reccgLcr0aPO5EyAb",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Birdwatcher",
    "level": 1,
    "tags": [],
    "needs": []
@@ -945,9 +1444,25 @@
    "needs": []
   },
   {
+   "id": "recg5IKOCHwi4F5ED",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Climber",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recHlLMLJG8JpGcjQ",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Coffee nerd",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recXUxEKNTbYeC1sf",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Commuter",
    "level": 1,
    "tags": [],
    "needs": []
@@ -964,6 +1479,14 @@
    "id": "reckna1wclIMgpjAh",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Cyclist",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recmKPCSqeDgI2Lyj",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "DJ",
    "level": 1,
    "tags": [],
    "needs": []
@@ -1033,9 +1556,33 @@
    "needs": []
   },
   {
+   "id": "recsKjkwb1oezfuIk",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Houseplant owner",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "recS8HZyIzrnyfIMb",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Kid",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recaAxS5UBmn3cVaO",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Knitter / crafter",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recFvgIpXhiqZMtDr",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Language learner",
    "level": 1,
    "tags": [],
    "needs": []
@@ -1081,9 +1628,25 @@
    "needs": []
   },
   {
+   "id": "recy6Qbcudc2ddlCk",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Podcaster / streamer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "rec8BkGdVwtwCCYbR",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Remote worker",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "rec7INkioN8nbaNCg",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Retro computing collector",
    "level": 1,
    "tags": [],
    "needs": []
@@ -1097,9 +1660,41 @@
    "needs": []
   },
   {
+   "id": "recsOnFft0WC5jGiC",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Skateboarder",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recnptwU1jgG0VHnd",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Small shop owner",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recD6uv9IN3KX6ZLp",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Stargazer",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
    "id": "rec5NOd8K3BZGKCRa",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Student",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "reckhdaeHzNpJg3Ui",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Surfer",
    "level": 1,
    "tags": [],
    "needs": []
@@ -1116,6 +1711,14 @@
    "id": "rectAs32zOvbspHR3",
    "bucket": "recxMYpY1tbizUOq7",
    "label": "Teacher",
+   "level": 1,
+   "tags": [],
+   "needs": []
+  },
+  {
+   "id": "recs9fCUSyAldVskA",
+   "bucket": "recxMYpY1tbizUOq7",
+   "label": "Van lifer",
    "level": 1,
    "tags": [],
    "needs": []
