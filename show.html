@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Random Project Generator: Show Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Show mode: a single dark broadcast stage, sized to the viewport so a 16:9 screen share reads cleanly.
+   A solder-mask-green board with copper pads; ingredient cards are the components. */
+:root {
+  color-scheme: dark;
+  --stage: #06130E;
+  --stage-2: #0B2219;
+  --trace: rgba(72, 196, 147, 0.07);
+  --card: #10291F;
+  --card-edge: #1F4636;
+  --ink: #EAF6EF;
+  --muted: #8FB3A1;
+  --copper: #F0A060;
+  --copper-deep: #B35A22;
+  --hw: #F0A060;     /* Hardware */
+  --human: #6FD3E8;  /* Human */
+  --flavor: #F08AC0; /* Flavor */
+  --strike: #FF4D4D;
+  --font-display: "Bricolage Grotesque", "Avenir Next Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--stage); color: var(--ink); font-family: var(--font-mono);
+  overflow: hidden; user-select: none; -webkit-user-select: none;
+}
+body.idle { cursor: none; }
+[hidden] { display: none !important; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+
+/* Board texture: copper pads on a grid with faint traces */
+.stage {
+  position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr auto;
+  padding: max(2.2vh, env(safe-area-inset-top, 0px)) 3.2vw max(2.2vh, env(safe-area-inset-bottom, 0px));
+  gap: 2.2vh;
+  background:
+    radial-gradient(circle at center, rgba(240,160,96,.10) 0 2px, transparent 2.5px) 0 0 / 56px 56px,
+    linear-gradient(var(--trace) 1px, transparent 1px) 0 28px / 56px 56px,
+    linear-gradient(90deg, var(--trace) 1px, transparent 1px) 28px 0 / 56px 56px,
+    radial-gradient(120% 90% at 50% 40%, var(--stage-2), var(--stage) 70%);
+}
+
+/* Header */
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 2vw; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: clamp(20px, 3.2vh, 40px); letter-spacing: -0.01em; line-height: 1; }
+.brand span { color: var(--copper); }
+.meta { font-size: clamp(12px, 1.7vh, 20px); color: var(--muted); letter-spacing: .14em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.meta b { color: var(--ink); font-weight: 600; }
+
+/* Board */
+.board { position: relative; display: grid; gap: 2.2vh 1.6vw; align-content: center; min-height: 0; }
+.board[data-cols="1"] { grid-template-columns: minmax(0, 60vw); justify-content: center; }
+.board[data-cols="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.board[data-cols="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.board[data-cols="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.card {
+  container-type: inline-size; position: relative; min-width: 0;
+  min-height: clamp(150px, 30vh, 360px);
+  background: linear-gradient(160deg, var(--card), #0C2018 70%);
+  border: 2px solid var(--card-edge); border-radius: 18px;
+  padding: clamp(16px, 2.2vw, 44px); display: grid; grid-template-rows: auto 1fr auto; gap: 1.6vh;
+  box-shadow: 0 1.4vh 3vh rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+  cursor: pointer; transform-origin: 50% 0%;
+  --accent: var(--hw);
+}
+.card[data-group="Human"] { --accent: var(--human); }
+.card[data-group="Flavor"] { --accent: var(--flavor); }
+.card::before { /* accent pad strip along the top edge */
+  content: ""; position: absolute; left: clamp(16px, 2.2vw, 44px); right: clamp(16px, 2.2vw, 44px); top: -2px; height: 5px; border-radius: 0 0 4px 4px;
+  background: var(--accent); opacity: .9;
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 3cqi; }
+.cat { font-size: max(12px, 4.4cqi); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.key {
+  font-size: max(12px, 4.2cqi); font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums;
+  border: 1.5px solid var(--card-edge); border-radius: 8px; padding: .25em .55em; line-height: 1;
+}
+.value {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -0.015em; line-height: 1.02;
+  font-size: 13.5cqi; text-wrap: balance; overflow-wrap: anywhere; align-self: center; position: relative;
+}
+.value.long { font-size: 10.5cqi; }
+.value.xlong { font-size: 8.6cqi; }
+.value.spinning { color: var(--muted); filter: blur(.4px); }
+.led { /* status LED, lights when the pick lands */
+  width: 3.2cqi; height: 3.2cqi; min-width: 10px; min-height: 10px; border-radius: 50%;
+  background: #23362D; box-shadow: inset 0 0 0 1px rgba(0,0,0,.4); justify-self: start;
+  transition: background .2s, box-shadow .2s;
+}
+.card.landed .led { background: var(--accent); box-shadow: 0 0 1.2vh var(--accent), 0 0 3vh color-mix(in srgb, var(--accent) 50%, transparent); }
+
+/* Reveal */
+.card.enter { animation: drop .55s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes drop {
+  0% { transform: translateY(-40vh) rotate(-6deg) scale(.9); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+.card.thunk { animation: thunk .35s ease-out; }
+@keyframes thunk {
+  0% { transform: scale(1.06); }
+  40% { transform: scale(.98) translateY(.4vh); }
+  100% { transform: none; }
+}
+.card.pending { opacity: 0; pointer-events: none; }
+
+/* Strike and cast off */
+.slash {
+  position: absolute; left: -4%; right: -4%; top: 50%; height: max(6px, 1.6cqi); border-radius: 99px;
+  background: var(--strike); box-shadow: 0 0 2vh rgba(255,77,77,.7);
+  transform: rotate(-4deg) scaleX(0); transform-origin: left center; pointer-events: none;
+}
+.card.striking .slash { animation: slash .28s cubic-bezier(.6, 0, .3, 1) forwards; }
+@keyframes slash { to { transform: rotate(-4deg) scaleX(1); } }
+.card.striking { animation: shake .32s .22s both; border-color: var(--strike); }
+.card.striking .value { color: color-mix(in srgb, var(--ink) 55%, var(--strike)); }
+@keyframes shake {
+  0%, 100% { transform: none; }
+  20% { transform: translateX(-1.2vw) rotate(-1.5deg); }
+  45% { transform: translateX(1vw) rotate(1.2deg); }
+  70% { transform: translateX(-.6vw) rotate(-.6deg); }
+}
+.card.falling { animation: fall .75s cubic-bezier(.5, 0, .9, .5) forwards; pointer-events: none; }
+@keyframes fall {
+  0% { transform: none; opacity: 1; filter: none; }
+  20% { transform: translateY(-3vh) rotate(calc(var(--spin) * .1)); }
+  100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: .2; filter: grayscale(1); }
+}
+.card.sweep { animation: sweep .45s cubic-bezier(.5, 0, .9, .5) forwards; pointer-events: none; }
+@keyframes sweep { to { transform: translateX(var(--drift)) rotate(var(--spin)) scale(.8); opacity: 0; } }
+
+/* Empty / intro state */
+.intro { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 3vh; pointer-events: none; }
+.intro h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(44px, 11vh, 150px); line-height: .92; letter-spacing: -0.02em; }
+.intro h1 span { color: var(--copper); display: block; }
+.intro p { margin: 0; font-size: clamp(14px, 2.4vh, 28px); color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+.intro kbd { color: var(--ink); border: 2px solid var(--card-edge); border-bottom-width: 4px; border-radius: 10px; padding: .1em .6em; font-family: var(--font-mono); }
+
+/* Footer: help strip, fades when idle */
+.help { display: flex; flex-wrap: wrap; gap: .6vh 2vw; justify-content: center; font-size: clamp(11px, 1.55vh, 18px); color: var(--muted); transition: opacity .4s; }
+.help b { color: var(--ink); font-weight: 600; }
+body.hide-help .help { opacity: 0; }
+
+/* Lock-in overlay */
+.lockin {
+  position: fixed; inset: 0; display: grid; place-content: center; gap: 3vh; padding: 6vh 8vw; text-align: center;
+  background: radial-gradient(90% 80% at 50% 45%, #0B2219, #040C09);
+  animation: fadein .35s ease-out both; z-index: 5;
+}
+@keyframes fadein { from { opacity: 0; } }
+.lockin .eyebrow { font-size: clamp(14px, 2.3vh, 28px); letter-spacing: .2em; text-transform: uppercase; color: var(--copper); }
+.lockin h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(36px, 8.5vh, 120px); line-height: 1; letter-spacing: -0.02em; text-wrap: balance; }
+.recipe { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.4vh 1.2vw; max-width: 84vw; margin: 0 auto; }
+.recipe span {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(18px, 3.6vh, 46px); padding: .35em .8em; border-radius: 999px;
+  border: 2px solid var(--accent, var(--copper)); color: var(--ink); background: rgba(255,255,255,.03);
+  animation: pop .45s cubic-bezier(.2, 1.5, .4, 1) both;
+}
+.recipe span[data-group="Human"] { --accent: var(--human); }
+.recipe span[data-group="Flavor"] { --accent: var(--flavor); }
+.recipe span[data-group="Hardware"] { --accent: var(--hw); }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } }
+.stamp {
+  justify-self: center; margin-top: 1vh; font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 3.4vh, 42px);
+  color: var(--copper); border: 4px solid var(--copper); border-radius: 12px; padding: .2em .7em; letter-spacing: .06em; text-transform: uppercase;
+  transform: rotate(-6deg); animation: stamp .4s cubic-bezier(.3, 1.6, .5, 1) both;
+}
+@keyframes stamp { from { transform: rotate(-6deg) scale(2.4); opacity: 0; } }
+
+/* Settings drawer */
+.settings {
+  position: fixed; right: 2vw; top: 8vh; width: min(440px, 92vw); max-height: 84vh; overflow-y: auto; z-index: 6;
+  background: #0E241B; border: 2px solid var(--card-edge); border-radius: 16px; padding: 22px; display: grid; gap: 16px;
+  box-shadow: 0 2vh 5vh rgba(0,0,0,.6); cursor: auto; font-size: 15px;
+}
+.settings h3 { margin: 0; font-family: var(--font-display); font-size: 24px; }
+.settings p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.settings fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.settings legend { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.settings label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.settings input[type=checkbox], .settings input[type=radio] { accent-color: var(--copper); width: 18px; height: 18px; margin: 0; }
+.settings .row { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.settings .close { justify-self: end; background: var(--copper); color: #1A0D04; border: 0; border-radius: 999px; padding: 8px 18px; font-weight: 600; cursor: pointer; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 7vh; transform: translateX(-50%); z-index: 7;
+  background: rgba(0,0,0,.75); border: 1px solid var(--card-edge); color: var(--ink);
+  padding: 10px 20px; border-radius: 999px; font-size: clamp(13px, 1.8vh, 20px); opacity: 0; transition: opacity .25s; pointer-events: none;
+}
+.toast.show { opacity: 1; }
+.error { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; color: var(--muted); font-size: 22px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card.enter, .card.thunk, .card.striking, .card.falling, .card.sweep, .recipe span, .stamp, .lockin { animation-duration: .01s !important; animation-delay: 0s !important; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <header class="top">
+    <div class="brand">Random Project <span>Generator</span></div>
+    <div class="meta" id="meta"></div>
+  </header>
+  <main class="board" id="board" data-cols="3" aria-live="polite">
+    <div class="intro" id="intro">
+      <h1>What are we<span>building?</span></h1>
+      <p>Press <kbd>Space</kbd> to roll</p>
+    </div>
+  </main>
+  <footer class="help" id="help">
+    <span><b>Space</b> roll</span>
+    <span><b>1–9</b> or click: cast off</span>
+    <span><b>Shift+1–9</b>: re-roll one</span>
+    <span><b>U</b> undo</span>
+    <span><b>Enter</b> lock it in</span>
+    <span><b>F</b> full screen</span>
+    <span><b>S</b> settings</span>
+    <span><b>H</b> hide help</span>
+  </footer>
+</div>
+
+<section class="lockin" id="lockin" hidden aria-live="polite">
+  <div class="eyebrow">This week's build</div>
+  <h2 id="lockTitle"></h2>
+  <div class="recipe" id="recipe"></div>
+  <div class="stamp">Locked in</div>
+</section>
+
+<aside class="settings" id="settings" hidden aria-label="Show settings">
+  <h3>Show settings</h3>
+  <fieldset id="bucketSet"><legend>Categories in the roll</legend></fieldset>
+  <fieldset>
+    <legend>Reveal pace</legend>
+    <div class="row">
+      <label><input type="radio" name="pace" id="pace-fast" value="fast"> Fast</label>
+      <label><input type="radio" name="pace" id="pace-normal" value="normal"> Normal</label>
+      <label><input type="radio" name="pace" id="pace-slow" value="slow"> Dramatic</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Sound</legend>
+    <label><input type="checkbox" id="soundOn"> Sound effects (M toggles)</label>
+  </fieldset>
+  <p>Settings are remembered in this browser. Changes to categories apply on the next roll.</p>
+  <button class="close" type="button" id="closeSettings">Done</button>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("rpg-show:" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("rpg-show:" + k, JSON.stringify(v)); } catch (e) {} }
+};
+const PACE = { fast: { gap: 450, spin: 500 }, normal: { gap: 850, spin: 850 }, slow: { gap: 1400, spin: 1300 } };
+const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const S = {
+  buckets: [], items: [], include: store.get("include", null), pace: store.get("pace", "normal"), sound: store.get("sound", true),
+  cards: [],        // live cards in display order: {uid, bucket, item, el}
+  struck: [],       // undo stack: {card, index}
+  rolls: 0, busy: false, timers: []
+};
+let uid = 0;
+
+/* ---------- data ---------- */
+const itemById = (id) => S.items.find((i) => i.id === id);
+const itemsIn = (bid) => S.items.filter((i) => i.bucket === bid);
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+function included(b) { return S.include && b.id in S.include ? S.include[b.id] : !!b.rolled; }
+
+// Pick one ingredient per included bucket, in bucket order, honoring Provides/Needs tags.
+function drawRoll() {
+  const provided = new Set(); const out = [];
+  for (const b of S.buckets) {
+    if (!included(b)) continue;
+    const pool = itemsIn(b.id); if (!pool.length) continue;
+    let ok = pool.filter((i) => (i.needs || []).every((t) => provided.has(t)));
+    if (!ok.length) ok = pool;
+    const it = pick(ok);
+    (it.tags || []).forEach((t) => provided.add(t));
+    out.push({ bucket: b, item: it });
+  }
+  return out;
+}
+function rerollItem(card) {
+  const provided = new Set();
+  for (const c of S.cards) if (c !== card && S.buckets.indexOf(c.bucket) < S.buckets.indexOf(card.bucket)) (c.item.tags || []).forEach((t) => provided.add(t));
+  const pool = itemsIn(card.bucket.id).filter((i) => i.id !== card.item.id);
+  let ok = pool.filter((i) => (i.needs || []).every((t) => provided.has(t)));
+  if (!ok.length) ok = pool;
+  return ok.length ? pick(ok) : card.item;
+}
+
+/* ---------- sound (synthesized, no files) ---------- */
+let ac = null;
+function audio() {
+  if (!S.sound) return null;
+  try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume(); } catch (e) { return null; }
+  return ac;
+}
+function tone({ f = 800, f2 = null, type = "square", dur = 0.03, vol = 0.04, at = 0 }) {
+  const a = audio(); if (!a) return;
+  const t = a.currentTime + at, o = a.createOscillator(), g = a.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
+}
+function noise({ dur = 0.4, from = 1800, to = 300, vol = 0.12 }) {
+  const a = audio(); if (!a) return;
+  const len = Math.floor(a.sampleRate * dur), buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  const src = a.createBufferSource(), bp = a.createBiquadFilter(), g = a.createGain(), t = a.currentTime;
+  bp.type = "bandpass"; bp.Q.value = 1.2; bp.frequency.setValueAtTime(from, t); bp.frequency.exponentialRampToValueAtTime(to, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.buffer = buf; src.connect(bp).connect(g).connect(a.destination); src.start(t);
+}
+const sfx = {
+  tick: () => tone({ f: 1400 + Math.random() * 400, dur: 0.018, vol: 0.025 }),
+  land: () => { tone({ f: 160, f2: 55, type: "sine", dur: 0.22, vol: 0.35 }); tone({ f: 880, type: "triangle", dur: 0.12, vol: 0.05, at: 0.01 }); },
+  strike: () => { tone({ f: 520, f2: 90, type: "sawtooth", dur: 0.28, vol: 0.06 }); },
+  whoosh: () => noise({ dur: 0.5, from: 2400, to: 200, vol: 0.10 }),
+  sweep: () => noise({ dur: 0.35, from: 900, to: 3000, vol: 0.07 }),
+  lock: () => { [523, 659, 784, 1047].forEach((f, i) => tone({ f, type: "triangle", dur: 0.22, vol: 0.06, at: i * 0.09 })); }
+};
+
+/* ---------- layout helpers ---------- */
+function colsFor(n) { return n <= 1 ? 1 : n === 2 ? 2 : n === 4 ? 2 : n <= 6 ? 3 : n <= 8 ? 4 : 3; }
+function setCols(n) { $("board").dataset.cols = colsFor(n); }
+function sizeClass(label) { return label.length > 26 ? "xlong" : label.length > 16 ? "long" : ""; }
+function later(fn, ms) { const t = setTimeout(fn, ms); S.timers.push(t); return t; }
+function clearTimers() { S.timers.forEach(clearTimeout); S.timers = []; }
+
+// FLIP: animate live cards from their old positions to their new ones after a layout change.
+function flip(change) {
+  const els = S.cards.map((c) => c.el).filter((el) => el.isConnected);
+  const before = new Map(els.map((el) => [el, el.getBoundingClientRect()]));
+  change();
+  if (REDUCED) return;
+  for (const el of els) {
+    if (!el.isConnected) continue;
+    const a = before.get(el), b = el.getBoundingClientRect();
+    const dx = a.left - b.left, dy = a.top - b.top, sx = a.width / b.width, sy = a.height / b.height;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(sx - 1) < .01) continue;
+    el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` }, { transform: "none" }],
+      { duration: 520, easing: "cubic-bezier(.2, .9, .3, 1)" });
+  }
+}
+function renumber() { S.cards.forEach((c, i) => { c.el.querySelector(".key").textContent = i < 9 ? i + 1 : ""; }); }
+function updateMeta() {
+  const m = $("meta"); m.replaceChildren();
+  if (!S.rolls) return;
+  if (S.busy) { const r = document.createElement("b"); r.textContent = "Roll " + S.rolls; m.append(r, " · rolling"); return; }
+  const b1 = document.createElement("b"); b1.textContent = "Roll " + S.rolls;
+  const b2 = document.createElement("b"); b2.textContent = S.cards.length;
+  m.append(b1, " · ", b2, S.cards.length === 1 ? " ingredient left" : " ingredients left");
+}
+
+function makeCard(bucket, item) {
+  const el = document.createElement("article");
+  el.className = "card"; el.dataset.group = bucket.group || "Flavor";
+  el.innerHTML = '<div class="card-head"><span class="cat"></span><span class="key"></span></div><div class="value"><span class="slash"></span><span class="txt"></span></div><div class="led"></div>';
+  el.querySelector(".cat").textContent = bucket.name;
+  const card = { uid: ++uid, bucket, item, el };
+  el.addEventListener("click", (e) => { const i = S.cards.indexOf(card); if (i < 0) return; e.shiftKey ? rerollOne(i) : castOff(i); });
+  return card;
+}
+function setValue(card, label) {
+  const v = card.el.querySelector(".value");
+  v.className = "value " + sizeClass(label);
+  // Keep hyphenated words (Time-of-flight, Wi-Fi) on one line.
+  const txt = card.el.querySelector(".txt"); txt.replaceChildren();
+  label.split(" ").forEach((w, i) => {
+    if (i) txt.append(" ");
+    if (w.includes("-")) { const n = document.createElement("span"); n.style.whiteSpace = "nowrap"; n.textContent = w; txt.append(n); }
+    else txt.append(w);
+  });
+}
+
+// Slot-machine spin through the bucket's ingredients, slowing down, then land on the pick.
+function spinTo(card, ms, done) {
+  const pool = itemsIn(card.bucket.id); const v = card.el.querySelector(".value");
+  if (REDUCED || pool.length < 2) { setValue(card, card.item.label); land(card); return done && done(); }
+  v.classList.add("spinning");
+  let elapsed = 0, step = 45;
+  const tick = () => {
+    if (elapsed >= ms) {
+      setValue(card, card.item.label); land(card); return done && done();
+    }
+    let p; do { p = pick(pool); } while (pool.length > 1 && p.label === card.el.querySelector(".txt").textContent);
+    setValue(card, p.label); card.el.querySelector(".value").classList.add("spinning");
+    sfx.tick();
+    elapsed += step; step = Math.min(220, step * 1.13);
+    later(tick, step);
+  };
+  tick();
+}
+function land(card) {
+  card.el.classList.remove("thunk"); void card.el.offsetWidth;
+  card.el.classList.add("landed", "thunk"); sfx.land();
+}
+
+/* ---------- actions ---------- */
+function roll() {
+  if (!S.items.length) return;
+  clearTimers(); closeLockin();
+  const old = S.cards; S.cards = []; S.struck = [];
+  const board = $("board");
+  $("intro").hidden = true;
+  const startNew = () => {
+    board.querySelectorAll(".card").forEach((el) => el.remove());
+    const draw = drawRoll();
+    if (!draw.length) { toast("No categories are switched on. Press S to pick some."); return; }
+    S.rolls++; setCols(draw.length);
+    S.cards = draw.map(({ bucket, item }) => makeCard(bucket, item));
+    S.cards.forEach((c) => { c.el.classList.add("pending"); c.el.querySelector(".txt").textContent = " "; board.append(c.el); });
+    const pace = PACE[S.pace] || PACE.normal; S.busy = true;
+    renumber(); updateMeta();
+    S.cards.forEach((c, i) => later(() => {
+      c.el.classList.remove("pending"); c.el.classList.add("enter");
+      sfx.whoosh();
+      later(() => spinTo(c, pace.spin, () => { if (i === S.cards.length - 1) { S.busy = false; updateMeta(); } }), REDUCED ? 0 : 380);
+    }, i * pace.gap));
+  };
+  if (old.length && !REDUCED) {
+    sfx.sweep();
+    old.forEach((c, i) => {
+      c.el.style.setProperty("--drift", (i % 2 ? 1 : -1) * (40 + Math.random() * 40) + "vw");
+      c.el.style.setProperty("--spin", (i % 2 ? 1 : -1) * (20 + Math.random() * 30) + "deg");
+      c.el.style.animationDelay = i * 40 + "ms"; c.el.classList.add("sweep");
+    });
+    later(startNew, 480 + old.length * 40);
+  } else startNew();
+}
+
+function castOff(i) {
+  const card = S.cards[i]; if (!card || card.el.classList.contains("striking")) return;
+  closeLockin();
+  const el = card.el;
+  el.classList.add("striking"); sfx.strike();
+  const dir = Math.random() < .5 ? -1 : 1;
+  el.style.setProperty("--spin", dir * (25 + Math.random() * 35) + "deg");
+  el.style.setProperty("--drift", dir * (5 + Math.random() * 12) + "vw");
+  setTimeout(() => {
+    // Pull it out of the grid so it can fall freely while the others close the gap.
+    const r = el.getBoundingClientRect();
+    el.style.position = "fixed"; el.style.left = r.left + "px"; el.style.top = r.top + "px";
+    el.style.width = r.width + "px"; el.style.height = r.height + "px"; el.style.margin = "0"; el.style.zIndex = 4;
+    document.body.append(el);
+    el.classList.remove("striking", "thunk", "enter"); el.querySelector(".slash").style.transform = "rotate(-4deg) scaleX(1)";
+    el.classList.add("falling"); sfx.whoosh();
+    const idx = S.cards.indexOf(card);
+    S.struck.push({ card, index: idx });
+    flip(() => { S.cards.splice(idx, 1); setCols(Math.max(1, S.cards.length)); renumber(); });
+    updateMeta();
+    setTimeout(() => el.remove(), 800);
+  }, REDUCED ? 0 : 560);
+}
+
+function undo() {
+  const last = S.struck.pop(); if (!last) return toast("Nothing to bring back.");
+  const card = makeCard(last.card.bucket, last.card.item);
+  setValue(card, card.item.label);
+  const idx = Math.min(last.index, S.cards.length);
+  flip(() => {
+    S.cards.splice(idx, 0, card);
+    const after = S.cards[idx + 1];
+    after ? $("board").insertBefore(card.el, after.el) : $("board").append(card.el);
+    setCols(S.cards.length); renumber();
+  });
+  card.el.classList.add("enter", "landed"); sfx.land(); updateMeta();
+}
+
+function rerollOne(i) {
+  const card = S.cards[i]; if (!card) return;
+  closeLockin();
+  card.item = rerollItem(card);
+  card.el.classList.remove("landed");
+  spinTo(card, (PACE[S.pace] || PACE.normal).spin);
+}
+
+function lockIn() {
+  if (!S.cards.length) return toast("Roll first.");
+  const r = $("recipe"); r.replaceChildren();
+  S.cards.forEach((c, i) => {
+    const s = document.createElement("span"); s.dataset.group = c.bucket.group || "Flavor";
+    s.textContent = c.item.label; s.style.animationDelay = 150 + i * 120 + "ms"; r.append(s);
+  });
+  $("lockTitle").textContent = S.cards.length === 1 ? "One ingredient. Make it count." : "Let's build it.";
+  const stamp = document.querySelector(".stamp"); stamp.style.animationDelay = 250 + S.cards.length * 120 + "ms";
+  $("lockin").hidden = false;
+  later(sfx.lock, 200 + S.cards.length * 120);
+}
+function closeLockin() { $("lockin").hidden = true; }
+
+/* ---------- settings ---------- */
+function renderSettings() {
+  const fs = $("bucketSet"); fs.querySelectorAll("label").forEach((l) => l.remove());
+  for (const b of S.buckets) {
+    if (!itemsIn(b.id).length) continue;
+    const l = document.createElement("label"); const c = document.createElement("input");
+    c.type = "checkbox"; c.id = "inc-" + b.id; c.checked = included(b);
+    c.addEventListener("change", () => { S.include = { ...(S.include || {}), [b.id]: c.checked }; store.set("include", S.include); });
+    l.append(c, " " + b.name + " ", Object.assign(document.createElement("span"), { textContent: "(" + itemsIn(b.id).length + ")", style: "color:var(--muted)" }));
+    fs.append(l);
+  }
+  for (const k of Object.keys(PACE)) $("pace-" + k).checked = S.pace === k;
+  $("soundOn").checked = !!S.sound;
+}
+function toggleSettings(force) {
+  const el = $("settings"); const show = force == null ? el.hidden : force;
+  if (show) renderSettings();
+  el.hidden = !show;
+  if (show) el.querySelector("input")?.focus(); else document.activeElement?.blur();
+}
+document.querySelectorAll('input[name=pace]').forEach((r) => r.addEventListener("change", () => { S.pace = r.value; store.set("pace", S.pace); }));
+$("soundOn").addEventListener("change", (e) => { S.sound = e.target.checked; store.set("sound", S.sound); });
+$("closeSettings").addEventListener("click", () => toggleSettings(false));
+
+/* ---------- misc ---------- */
+let toastT;
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2000); }
+function fullscreen() {
+  const d = document;
+  try {
+    if (d.fullscreenElement) d.exitFullscreen();
+    else (d.documentElement.requestFullscreen || d.documentElement.webkitRequestFullscreen).call(d.documentElement).catch?.(() => toast("Full screen isn't available here."));
+  } catch (e) { toast("Full screen isn't available here."); }
+}
+let idleT;
+function poke() { document.body.classList.remove("idle"); clearTimeout(idleT); idleT = setTimeout(() => document.body.classList.add("idle"), 2500); }
+document.addEventListener("mousemove", poke); poke();
+if (store.get("hideHelp", false)) document.body.classList.add("hide-help");
+
+document.addEventListener("keydown", (e) => {
+  if (!$("settings").hidden) { if (e.key === "Escape" || e.key.toLowerCase() === "s") { e.preventDefault(); toggleSettings(false); } return; }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  const digit = /^Digit([1-9])$/.exec(e.code);
+  if (k === " " || k === "Spacebar") { e.preventDefault(); roll(); }
+  else if (digit) { e.preventDefault(); const i = Number(digit[1]) - 1; e.shiftKey ? rerollOne(i) : castOff(i); }
+  else if (k === "u" || k === "U" || k === "Backspace") { e.preventDefault(); undo(); }
+  else if (k === "Enter") { e.preventDefault(); $("lockin").hidden ? lockIn() : closeLockin(); }
+  else if (k === "Escape") { closeLockin(); }
+  else if (k === "f" || k === "F") fullscreen();
+  else if (k === "s" || k === "S") { e.preventDefault(); toggleSettings(true); }
+  else if (k === "m" || k === "M") { S.sound = !S.sound; store.set("sound", S.sound); toast(S.sound ? "Sound on" : "Sound off"); }
+  else if (k === "h" || k === "H") { const h = document.body.classList.toggle("hide-help"); store.set("hideHelp", h); }
+});
+$("lockin").addEventListener("click", closeLockin);
+
+/* ---------- boot ---------- */
+fetch("pantry.json", { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }).then((data) => {
+  S.buckets = (data.buckets || []).slice().sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+  S.items = data.items || [];
+}).catch(() => {
+  const e = document.createElement("div"); e.className = "error"; e.textContent = "The pantry didn't load. Refresh the page to try again.";
+  $("intro").hidden = true; $("board").append(e);
+});
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 A random ingredient roller for one-week rapid prototyping builds. Roll a brain, a sensor, a user, a vibe and a twist, lock what sparks something, re-roll the rest, and build it as far as it goes.
 
-The page is a single static `index.html` that reads `pantry.json`. The pantry is edited in Airtable and synced here by a GitHub Action.
+The site is two static pages that read `pantry.json`: `index.html`, the everyday roller, and `show.html`, a full-screen show mode for recording (Space rolls, 1–9 casts off an ingredient, Shift+1–9 re-rolls one, U undoes, Enter locks the build in, F goes full screen, S opens settings, M toggles sound, H hides the help). The pantry is edited in Airtable and synced here by a GitHub Action.
 
 ## Editing the pantry
 
