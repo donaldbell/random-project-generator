@@ -503,6 +503,10 @@ function lockIn() {
   const stamp = document.querySelector(".stamp"); stamp.style.animationDelay = 250 + S.cards.length * 120 + "ms";
   $("lockin").hidden = false;
   later(sfx.lock, 200 + S.cards.length * 120);
+  // When embedded (for example in the Product Speedrun console), hand the locked roll to the host page.
+  if (window.parent !== window) {
+    try { window.parent.postMessage({ source: "rpg", type: "lockin", ingredients: S.cards.map((c) => ({ bucket: c.bucket.name, group: c.bucket.group || "", label: c.item.label })) }, "*"); } catch (e) {}
+  }
 }
 function closeLockin() { $("lockin").hidden = true; }
 
