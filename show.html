@@ -432,7 +432,7 @@ function roll() {
     S.cards.forEach((c, i) => later(() => {
       c.el.classList.remove("pending"); c.el.classList.add("enter");
       sfx.whoosh();
-      later(() => spinTo(c, pace.spin, () => { if (i === S.cards.length - 1) { S.busy = false; updateMeta(); } }), REDUCED ? 0 : 380);
+      later(() => spinTo(c, pace.spin, () => { if (i === S.cards.length - 1) { S.busy = false; updateMeta(); postRoll("roll"); } }), REDUCED ? 0 : 380);
     }, i * pace.gap));
   };
   if (old.length && !REDUCED) {
@@ -465,6 +465,7 @@ function castOff(i) {
     const idx = S.cards.indexOf(card);
     S.struck.push({ card, index: idx });
     flip(() => { S.cards.splice(idx, 1); setCols(Math.max(1, S.cards.length)); renumber(); });
+    postRoll("roll");
     updateMeta();
     setTimeout(() => el.remove(), 800);
   }, REDUCED ? 0 : 560);
@@ -481,7 +482,7 @@ function undo() {
     after ? $("board").insertBefore(card.el, after.el) : $("board").append(card.el);
     setCols(S.cards.length); renumber();
   });
-  card.el.classList.add("enter", "landed"); sfx.land(); updateMeta();
+  card.el.classList.add("enter", "landed"); sfx.land(); updateMeta(); postRoll("roll");
 }
 
 function rerollOne(i) {
@@ -489,7 +490,7 @@ function rerollOne(i) {
   closeLockin();
   card.item = rerollItem(card);
   card.el.classList.remove("landed");
-  spinTo(card, (PACE[S.pace] || PACE.normal).spin);
+  spinTo(card, (PACE[S.pace] || PACE.normal).spin, () => postRoll("roll"));
 }
 
 function lockIn() {
@@ -503,10 +504,12 @@ function lockIn() {
   const stamp = document.querySelector(".stamp"); stamp.style.animationDelay = 250 + S.cards.length * 120 + "ms";
   $("lockin").hidden = false;
   later(sfx.lock, 200 + S.cards.length * 120);
-  // When embedded (for example in the Product Speedrun console), hand the locked roll to the host page.
-  if (window.parent !== window) {
-    try { window.parent.postMessage({ source: "rpg", type: "lockin", ingredients: S.cards.map((c) => ({ bucket: c.bucket.name, group: c.bucket.group || "", label: c.item.label })) }, "*"); } catch (e) {}
-  }
+  postRoll("lockin");
+}
+// When embedded (for example in the Product Speedrun console), keep the host page up to date with the current roll.
+function postRoll(type) {
+  if (window.parent === window) return;
+  try { window.parent.postMessage({ source: "rpg", type, ingredients: S.cards.map((c) => ({ bucket: c.bucket.name, group: c.bucket.group || "", label: c.item.label })) }, "*"); } catch (e) {}
 }
 function closeLockin() { $("lockin").hidden = true; }
 
